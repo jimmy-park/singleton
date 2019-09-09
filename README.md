@@ -7,8 +7,7 @@ It's simple, thread-safe and naive
 ```cpp
 #include "singleton.h"
 
-class A : public Singleton<A>
-{
+class A : public Singleton<A> {
 public:
     void RunAnywhere() {}
 };
@@ -19,7 +18,7 @@ int main()
 }
 ```
 
-Working example : <https://godbolt.org/z/J-ZcA8>
+Static polymorphism example : <https://godbolt.org/z/J-ZcA8>
 
 ## Reference
 
