@@ -40,6 +40,11 @@ public:
     {
         static_cast<T*>(this)->Speak();
     }
+    
+    void Speak()
+    {
+        Mic("White noise");
+    }
 };
 
 class Dog : public Stage<Dog> {
