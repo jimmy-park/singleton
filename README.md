@@ -40,10 +40,10 @@ public:
     {
         static_cast<T*>(this)->Speak();
     }
-    
+
     void Speak()
     {
-        Mic("White noise");
+        Mic("...");
     }
 };
 
@@ -63,10 +63,14 @@ public:
     }
 };
 
+class Fish : public Stage<Fish> {
+};
+
 int main()
 {
     Dog::GetInstance().Speaker(); // Puppy: Bark!
     Cat::GetInstance().Speaker(); // Kitty: Meow~
+    Fish::GetInstance().Speaker(); // ...
 }
 ```
 
