@@ -29,7 +29,7 @@ int main()
 #include "singleton.h"
 
 template <typename T>
-class Animal : public Singleton<T> {
+class Stage : public Singleton<T> {
 public:
     void Mic(const std::string& talk)
     {
@@ -42,7 +42,7 @@ public:
     }
 };
 
-class Dog : public Animal<Dog> {
+class Dog : public Stage<Dog> {
 public:
     void Speak()
     {
@@ -50,7 +50,7 @@ public:
     }
 };
 
-class Cat : public Animal<Cat> {
+class Cat : public Stage<Cat> {
 public:
     void Speak()
     {
