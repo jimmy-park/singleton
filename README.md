@@ -31,9 +31,14 @@ int main()
 template <typename T>
 class Animal : public Singleton<T> {
 public:
-    void WhoAmI(const std::string& name)
+    void Mic(const std::string& talk)
     {
-        std::cout << name << ": ";
+        std::cout << talk << std::endl;
+    }
+
+    void Speaker()
+    {
+        static_cast<T*>(this)->Speak();
     }
 };
 
@@ -41,8 +46,7 @@ class Dog : public Animal<Dog> {
 public:
     void Speak()
     {
-        WhoAmI("Puppy");
-        std::cout << "Bark!" << std::endl;
+        Mic("Puppy: Bark!");
     }
 };
 
@@ -50,8 +54,7 @@ class Cat : public Animal<Cat> {
 public:
     void Speak()
     {
-        WhoAmI("Kitty");
-        std::cout << "Meow~" << std::endl;
+        Mic("Kitty: Meow~");
     }
 };
 
