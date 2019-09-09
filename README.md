@@ -60,8 +60,8 @@ public:
 
 int main()
 {
-    Dog::GetInstance().Speak(); // Puppy: Bark!
-    Cat::GetInstance().Speak(); // Kitty: Meow~
+    Dog::GetInstance().Speaker(); // Puppy: Bark!
+    Cat::GetInstance().Speaker(); // Kitty: Meow~
 }
 ```
 
