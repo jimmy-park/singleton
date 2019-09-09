@@ -1,6 +1,6 @@
 # Singleton with CRTP (Curiously Recurring Template Pattern)
 
-It's simple, thread-safe and naive
+It's simple, thread-safe and naive.
 
 ## Usage
 
