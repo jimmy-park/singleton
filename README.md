@@ -65,6 +65,7 @@ int main()
 ### Online Example
 
 [Static polymorphism #1](https://godbolt.org/z/xIom78)
+
 [Static polymorphism #2](https://godbolt.org/z/sD6gmn)
 
 ## Reference
