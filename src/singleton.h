@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SINGLETON_H_
+#define SINGLETON_H_
 
 template <typename T>
 class Singleton {
@@ -17,3 +18,5 @@ private:
     Singleton(const Singleton&) = delete;
     Singleton& operator=(const Singleton&) = delete;
 };
+
+#endif // SINGLETON_H_
