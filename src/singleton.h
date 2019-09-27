@@ -1,12 +1,12 @@
 #ifndef SINGLETON_H_
 #define SINGLETON_H_
 
-template <typename T>
+template <typename Derived>
 class Singleton {
 public:
-    static T& GetInstance()
+    static Derived& GetInstance()
     {
-        static T instance;
+        static Derived instance;
         return instance;
     }
 
