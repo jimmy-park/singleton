@@ -1,6 +1,6 @@
-# Singleton with CRTP (Curiously Recurring Template Pattern)
+# C++11 Template Singleton Pattern
 
-It's simple, thread-safe and naive.
+Implement a thread-safe singleton class using CRTP (Curiously Recurring Template Pattern)
 
 ## Usage
 
