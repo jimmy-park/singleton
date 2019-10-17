@@ -38,7 +38,7 @@ public:
 
     void Speaker()
     {
-        static_cast<const Derived&>(this).Speak();
+        static_cast<const Derived&>(*this).Speak();
     }
 
     void Speak()
