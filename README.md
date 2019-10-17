@@ -28,8 +28,8 @@ int main()
 
 #include "singleton.h"
 
-template <typename T>
-class Stage : public Singleton<T> {
+template <typename Derived>
+class Stage : public Singleton<Derived> {
 public:
     void Mic(const std::string& talk)
     {
@@ -38,7 +38,7 @@ public:
 
     void Speaker()
     {
-        static_cast<T*>(this)->Speak();
+        static_cast<const Derived&>(this).Speak();
     }
 
     void Speak()
