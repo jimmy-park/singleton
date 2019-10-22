@@ -13,8 +13,6 @@ public:
 protected:
     Singleton() = default;
     ~Singleton() = default;
-
-private:
     Singleton(const Singleton&) = delete;
     Singleton& operator=(const Singleton&) = delete;
 };
