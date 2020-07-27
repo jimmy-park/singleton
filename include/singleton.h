@@ -6,7 +6,11 @@ class Singleton {
 public:
     static Derived& GetInstance()
     {
-        static Derived instance;
+        struct Dummy : Derived {
+            void ProhibitConstructFromDerived() { }
+        };
+
+        static Dummy instance;
         return instance;
     }
 
@@ -15,8 +19,11 @@ protected:
     Singleton(const Singleton&) = delete;
     Singleton(Singleton&&) = delete;
     Singleton& operator=(const Singleton&) = delete;
-    Singleton& operator=(Singleton&&) = delete;    
-    ~Singleton() = default;
+    Singleton& operator=(Singleton&&) = delete;
+    virtual ~Singleton() = default;
+
+private:
+    virtual void ProhibitConstructFromDerived() = 0;
 };
 
 #endif // SINGLETON_H_
