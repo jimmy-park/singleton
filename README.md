@@ -18,11 +18,14 @@ public:
 
 int main()
 {
+    // Compile error on debug build
+    // A a; 
+
     A::GetInstance().RunAnywhere();
 }
 ```
 
-[Compiler Explorer](https://godbolt.org/z/9M56KbT1r)
+[Compiler Explorer](https://godbolt.org/z/PP76b6f3z)
 
 ### When you need to control the destruction order manually
 
@@ -40,12 +43,15 @@ public:
 
 int main()
 {
+    // Compile error on debug build
+    // A a; 
+    
     A::GetInstance()->RunAnywhere();
     A::DestroyInstance();
 }
 ```
 
-[Compiler Explorer](https://godbolt.org/z/rYPha4rr3)
+[Compiler Explorer](https://godbolt.org/z/3hvxEdc87)
 
 ## Reference
 

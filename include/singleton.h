@@ -6,11 +6,15 @@ class Singleton {
 public:
     static Derived& GetInstance()
     {
+#ifdef DEBUG
         struct Dummy : public Derived {
             void ProhibitConstructFromDerived() const override { }
         };
 
         static Dummy instance;
+#else
+        static Derived instance;
+#endif // DEBUG
         return instance;
     }
 
@@ -22,8 +26,10 @@ protected:
     Singleton& operator=(Singleton&&) noexcept = delete;
     ~Singleton() = default;
 
+#ifdef DEBUG
 private:
     virtual void ProhibitConstructFromDerived() const = 0;
+#endif // DEBUG
 };
 
 #endif // SINGLETON_H_
