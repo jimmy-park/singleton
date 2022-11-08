@@ -9,11 +9,11 @@ class Singleton {
 public:
     static Derived* GetInstance()
     {
-#ifdef DEBUG
+#ifdef SINGLETON_INJECT_ABSTRACT_CLASS
         struct Dummy : public Derived {
             void ProhibitConstructFromDerived() const override { }
         };
-#endif // DEBUG
+#endif // SINGLETON_INJECT_ABSTRACT_CLASS
 
         // Double-checked locking pattern (DCLP)
         auto* instance = instance_.load(std::memory_order_acquire);
@@ -22,11 +22,11 @@ public:
 
             instance = instance_.load(std::memory_order_relaxed);
             if (!instance) {
-#ifdef DEBUG
+#ifdef SINGLETON_INJECT_ABSTRACT_CLASS
                 instance = new Dummy;
 #else
                 instance = new Derived;
-#endif // DEBUG
+#endif // SINGLETON_INJECT_ABSTRACT_CLASS
                 instance_.store(instance, std::memory_order_release);
             }
         }
@@ -46,16 +46,16 @@ protected:
     Singleton(Singleton&&) noexcept = delete;
     Singleton& operator=(const Singleton&) = delete;
     Singleton& operator=(Singleton&&) noexcept = delete;
-#ifdef DEBUG
+#ifdef SINGLETON_INJECT_ABSTRACT_CLASS
     virtual ~Singleton() = default;
 #else
     ~Singleton() = default;
-#endif // DEBUG
+#endif // SINGLETON_INJECT_ABSTRACT_CLASS
 
 private:
-#ifdef DEBUG
+#ifdef SINGLETON_INJECT_ABSTRACT_CLASS
     virtual void ProhibitConstructFromDerived() const = 0;
-#endif // DEBUG
+#endif // SINGLETON_INJECT_ABSTRACT_CLASS
 
     inline static std::atomic<Derived*> instance_ { nullptr };
     inline static std::mutex mutex_;

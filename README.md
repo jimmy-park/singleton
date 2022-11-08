@@ -9,19 +9,19 @@ Implement a thread-safe singleton class using CRTP (Curiously Recurring Template
 Rely on initialization of static local variable
 
 ```cpp
-#include "singleton.h"
+#include <singleton.hpp>
 
-class A : public Singleton<A> {
+class Foo : public Singleton<Foo> {
 public:
     void RunAnywhere() {}
 };
 
 int main()
 {
-    // Compile error on debug build
-    // A a; 
+    // Compile error when SINGLETON_INJECT_ABSTRACT_CLASS is ON
+    // Foo foo;
 
-    A::GetInstance().RunAnywhere();
+    Foo::GetInstance().RunAnywhere();
 }
 ```
 
@@ -34,24 +34,42 @@ Implement based on double-checked locking pattern (DCLP)
 Require C++17 due to inline static variable
 
 ```cpp
-#include "singleton_dclp.h"
+#include <singleton_dclp.hpp>
 
-class A : public Singleton<A> {
+class Foo : public Singleton<Foo> {
 public:
     void RunAnywhere() {}
 };
 
 int main()
 {
-    // Compile error on debug build
-    // A a; 
+    // Compile error when SINGLETON_INJECT_ABSTRACT_CLASS is ON
+    // Foo foo;
     
-    A::GetInstance()->RunAnywhere();
-    A::DestroyInstance();
+    Foo::GetInstance()->RunAnywhere();
+    Foo::DestroyInstance();
 }
 ```
 
 [Compiler Explorer](https://godbolt.org/z/3hvxEdc87)
+
+### CMake integration
+
+```CMake
+# Require CMake 3.23+
+include(FetchContent)
+
+set(SINGLETON_INJECT_ABSTRACT_CLASS ON) # default : OFF
+
+FetchContent_Declare(
+    singleton
+    URL https://github.com/jimmy-park/singleton/archive/main.zip
+)
+FetchContent_MakeAvailable(singleton)
+
+add_executable(main main.cpp)
+target_link_libraries(main PRIVATE singleton::singleton)
+```
 
 ## Reference
 
