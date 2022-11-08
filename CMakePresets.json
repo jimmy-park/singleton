@@ -1,0 +1,40 @@
+{
+    "version": 4,
+    "cmakeMinimumRequired": {
+        "major": 3,
+        "minor": 23
+    },
+    "configurePresets": [
+        {
+            "name": "base",
+            "binaryDir": "${sourceDir}/build/${presetName}",
+            "installDir": "${sourceDir}/install/${presetName}",
+            "cmakeExecutable": "cmake",
+            "cacheVariables": {
+                "CMAKE_MODULE_PATH": "${sourceDir}/cmake"
+            }
+        }
+    ],
+    "buildPresets": [
+        {
+            "name": "base-debug",
+            "configuration": "Debug",
+            "configurePreset": "base"
+        },
+        {
+            "name": "base-release",
+            "configuration": "Release",
+            "configurePreset": "base"
+        },
+        {
+            "name": "base-clean",
+            "targets": "clean",
+            "configurePreset": "base"
+        },
+        {
+            "name": "base-install",
+            "targets": "install",
+            "configurePreset": "base"
+        }
+    ]
+}
