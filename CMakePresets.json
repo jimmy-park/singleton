@@ -17,24 +17,21 @@
     ],
     "buildPresets": [
         {
-            "name": "base-debug",
-            "configuration": "Debug",
-            "configurePreset": "base"
-        },
-        {
-            "name": "base-release",
+            "name": "base",
             "configuration": "Release",
             "configurePreset": "base"
         },
         {
             "name": "base-clean",
-            "targets": "clean",
-            "configurePreset": "base"
+            "configuration": "Release",
+            "configurePreset": "base",
+            "targets": "clean"
         },
         {
             "name": "base-install",
-            "targets": "install",
-            "configurePreset": "base"
+            "configuration": "Release",
+            "configurePreset": "base",
+            "targets": "install"
         }
     ]
 }
