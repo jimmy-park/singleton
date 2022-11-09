@@ -1,20 +1,15 @@
-#ifndef SINGLETON_DCLP_H_
-#define SINGLETON_DCLP_H_
+#ifndef SINGLETON_DCLP_HPP_
+#define SINGLETON_DCLP_HPP_
 
 #include <atomic>
 #include <mutex>
 
+#ifndef SINGLETON_INJECT_ABSTRACT_CLASS
 template <typename Derived>
-class Singleton {
+class SingletonDclp {
 public:
     static Derived* GetInstance()
     {
-#ifdef SINGLETON_INJECT_ABSTRACT_CLASS
-        struct Dummy : public Derived {
-            void ProhibitConstructFromDerived() const override { }
-        };
-#endif // SINGLETON_INJECT_ABSTRACT_CLASS
-
         // Double-checked locking pattern (DCLP)
         auto* instance = instance_.load(std::memory_order_acquire);
         if (!instance) {
@@ -22,11 +17,7 @@ public:
 
             instance = instance_.load(std::memory_order_relaxed);
             if (!instance) {
-#ifdef SINGLETON_INJECT_ABSTRACT_CLASS
-                instance = new Dummy;
-#else
                 instance = new Derived;
-#endif // SINGLETON_INJECT_ABSTRACT_CLASS
                 instance_.store(instance, std::memory_order_release);
             }
         }
@@ -41,24 +32,62 @@ public:
     }
 
 protected:
-    Singleton() = default;
-    Singleton(const Singleton&) = delete;
-    Singleton(Singleton&&) noexcept = delete;
-    Singleton& operator=(const Singleton&) = delete;
-    Singleton& operator=(Singleton&&) noexcept = delete;
-#ifdef SINGLETON_INJECT_ABSTRACT_CLASS
-    virtual ~Singleton() = default;
-#else
-    ~Singleton() = default;
-#endif // SINGLETON_INJECT_ABSTRACT_CLASS
+    SingletonDclp() = default;
+    SingletonDclp(const SingletonDclp&) = delete;
+    SingletonDclp(SingletonDclp&&) noexcept = delete;
+    SingletonDclp& operator=(const SingletonDclp&) = delete;
+    SingletonDclp& operator=(SingletonDclp&&) noexcept = delete;
+    ~SingletonDclp() = default;
 
 private:
-#ifdef SINGLETON_INJECT_ABSTRACT_CLASS
+    inline static std::atomic<Derived*> instance_ { nullptr };
+    inline static std::mutex mutex_;
+};
+#else
+template <typename Derived>
+class SingletonDclp {
+public:
+    static Derived* GetInstance()
+    {
+        struct Dummy : public Derived {
+            void ProhibitConstructFromDerived() const override { }
+        };
+
+        // Double-checked locking pattern (DCLP)
+        auto* instance = instance_.load(std::memory_order_acquire);
+        if (!instance) {
+            std::lock_guard lock { mutex_ };
+
+            instance = instance_.load(std::memory_order_relaxed);
+            if (!instance) {
+                instance = new Dummy;
+                instance_.store(instance, std::memory_order_release);
+            }
+        }
+
+        return instance;
+    }
+
+    static void DestroyInstance()
+    {
+        if (auto* instance = instance_.exchange(nullptr, std::memory_order_acq_rel))
+            delete instance;
+    }
+
+protected:
+    SingletonDclp() = default;
+    SingletonDclp(const SingletonDclp&) = delete;
+    SingletonDclp(SingletonDclp&&) noexcept = delete;
+    SingletonDclp& operator=(const SingletonDclp&) = delete;
+    SingletonDclp& operator=(SingletonDclp&&) noexcept = delete;
+    virtual ~SingletonDclp() = default;
+
+private:
     virtual void ProhibitConstructFromDerived() const = 0;
-#endif // SINGLETON_INJECT_ABSTRACT_CLASS
 
     inline static std::atomic<Derived*> instance_ { nullptr };
     inline static std::mutex mutex_;
 };
+#endif // SINGLETON_INJECT_ABSTRACT_CLASS
 
-#endif // SINGLETON_DCLP_H_
+#endif // SINGLETON_DCLP_HPP_
