@@ -49,6 +49,29 @@ export(
     FILE ${PROJECT_BINARY_DIR}/${PROJECT_NAME}Targets.cmake
 )
 
+# Run a simple test
+if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+    set(SINGLETON_TEST_COMPILE_OPTIONS "/W4 /WX /permissive-")
+else()
+    set(SINGLETON_TEST_COMPILE_OPTIONS "-Wall -Wextra -Werror -pedantic")
+endif()
+
+set(SINGLETON_TEST_DIR ${CMAKE_BINARY_DIR})
+set(SINGLETON_TEST_SOURCE ${CMAKE_CURRENT_SOURCE_DIR}/apps/main.cpp)
+try_compile(
+    SINGLETON_TEST_RESULT
+    ${SINGLETON_TEST_DIR}
+    ${SINGLETON_TEST_SOURCE}
+    CMAKE_FLAGS
+    "-DINCLUDE_DIRECTORIES=${SINGLETON_INCLUDE_DIR}"
+    "-DCOMPILE_DEFINITIONS=${SINGLETON_TEST_COMPILE_OPTIONS}"
+    CXX_STANDARD 17
+)
+
+if(NOT SINGLETON_TEST_RESULT)
+    message(FATAL_ERROR "Failed to compile")
+endif()
+
 if(PROJECT_IS_TOP_LEVEL)
     add_subdirectory(apps)
 endif()
