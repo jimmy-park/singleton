@@ -25,7 +25,7 @@ int main()
 }
 ```
 
-[Compiler Explorer](https://godbolt.org/z/PP76b6f3z)
+[Compiler Explorer](https://godbolt.org/z/bn9GKGbxf)
 
 ### When you need to control the destruction order manually
 
@@ -36,22 +36,17 @@ Require C++17 due to inline static variable
 ```cpp
 #include <singleton_dclp.hpp>
 
-class Foo : public Singleton<Foo> {
+class Foo : public SingletonDclp<Foo> {
 public:
     void RunAnywhere() {}
 };
 
 int main()
 {
-    // Compile error when SINGLETON_INJECT_ABSTRACT_CLASS is ON
-    // Foo foo;
-    
     Foo::GetInstance()->RunAnywhere();
     Foo::DestroyInstance();
 }
 ```
-
-[Compiler Explorer](https://godbolt.org/z/3hvxEdc87)
 
 ### CMake integration
 
@@ -63,12 +58,12 @@ set(SINGLETON_INJECT_ABSTRACT_CLASS ON) # default : OFF
 
 FetchContent_Declare(
     singleton
-    URL https://github.com/jimmy-park/singleton/archive/main.zip
+    URL https://github.com/jimmy-park/singleton/archive/1.0.0.zip
 )
 FetchContent_MakeAvailable(singleton)
 
 add_executable(main main.cpp)
-target_link_libraries(main PRIVATE singleton::singleton)    # or singleton::dclp
+target_link_libraries(main PRIVATE singleton::singleton) # or singleton::dclp
 ```
 
 ## Reference
