@@ -25,12 +25,12 @@ target_sources(${PROJECT_NAME} INTERFACE
     FILES ${SINGLETON_INCLUDE_DIR}/singleton.hpp
 )
 
-# Create a dclp target
-add_library(dclp INTERFACE)
-add_library(${PROJECT_NAME}::dclp ALIAS dclp)
-target_compile_features(dclp INTERFACE cxx_std_17)
-target_compile_definitions(dclp INTERFACE ${SINGLETON_DEFINITIONS})
-target_sources(dclp INTERFACE
+# Create a singleton-dclp target
+add_library(${PROJECT_NAME}-dclp INTERFACE)
+add_library(${PROJECT_NAME}::${PROJECT_NAME}-dclp ALIAS ${PROJECT_NAME}-dclp)
+target_compile_features(${PROJECT_NAME}-dclp INTERFACE cxx_std_17)
+target_compile_definitions(${PROJECT_NAME}-dclp INTERFACE ${SINGLETON_DEFINITIONS})
+target_sources(${PROJECT_NAME}-dclp INTERFACE
     FILE_SET HEADERS
     BASE_DIRS ${SINGLETON_INCLUDE_DIR}
     FILES ${SINGLETON_INCLUDE_DIR}/singleton_dclp.hpp
@@ -39,14 +39,14 @@ target_sources(dclp INTERFACE
 # Install/Export targets
 include(GNUInstallDirs)
 install(
-    TARGETS ${PROJECT_NAME} dclp
+    TARGETS ${PROJECT_NAME} ${PROJECT_NAME}-dclp
     FILE_SET HEADERS
     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
 )
 export(
-    TARGETS ${PROJECT_NAME} dclp
+    TARGETS ${PROJECT_NAME} ${PROJECT_NAME}-dclp
     NAMESPACE ${PROJECT_NAME}::
-    FILE ${PROJECT_BINARY_DIR}/${PROJECT_NAME}Targets.cmake
+    FILE ${PROJECT_BINARY_DIR}/${PROJECT_NAME}-targets.cmake
 )
 
 # Run a simple test

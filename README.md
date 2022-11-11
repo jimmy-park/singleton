@@ -25,7 +25,7 @@ int main()
 }
 ```
 
-[Compiler Explorer](https://godbolt.org/z/bn9GKGbxf)
+[Compiler Explorer](https://godbolt.org/z/7K56adsz4)
 
 ### When you need to control the destruction order manually
 
@@ -50,12 +50,12 @@ int main()
 
 ### CMake integration
 
-```CMake
-# Require CMake 3.23+
-include(FetchContent)
+Require CMake 3.23+ due to `target_sources(FILE_SET)`
 
+```CMake
 set(SINGLETON_INJECT_ABSTRACT_CLASS ON) # default : OFF
 
+include(FetchContent)
 FetchContent_Declare(
     singleton
     URL https://github.com/jimmy-park/singleton/archive/1.0.0.zip
@@ -63,7 +63,7 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(singleton)
 
 add_executable(main main.cpp)
-target_link_libraries(main PRIVATE singleton::singleton) # or singleton::dclp
+target_link_libraries(main PRIVATE singleton::singleton) # or singleton::singleton-dclp
 ```
 
 ## Reference
