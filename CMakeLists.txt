@@ -15,22 +15,22 @@ set(SINGLETON_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
 set(SINGLETON_DEFINITIONS "$<$<BOOL:${SINGLETON_INJECT_ABSTRACT_CLASS}>:SINGLETON_INJECT_ABSTRACT_CLASS>")
 
 # Create a singleton target
-add_library(${PROJECT_NAME} INTERFACE)
-add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
-target_compile_features(${PROJECT_NAME} INTERFACE cxx_std_11)
-target_compile_definitions(${PROJECT_NAME} INTERFACE ${SINGLETON_DEFINITIONS})
-target_sources(${PROJECT_NAME} INTERFACE
+add_library(singleton INTERFACE)
+add_library(singleton::singleton ALIAS singleton)
+target_compile_features(singleton INTERFACE cxx_std_11)
+target_compile_definitions(singleton INTERFACE ${SINGLETON_DEFINITIONS})
+target_sources(singleton INTERFACE
     FILE_SET HEADERS
     BASE_DIRS ${SINGLETON_INCLUDE_DIR}
     FILES ${SINGLETON_INCLUDE_DIR}/singleton.hpp
 )
 
 # Create a singleton-dclp target
-add_library(${PROJECT_NAME}-dclp INTERFACE)
-add_library(${PROJECT_NAME}::${PROJECT_NAME}-dclp ALIAS ${PROJECT_NAME}-dclp)
-target_compile_features(${PROJECT_NAME}-dclp INTERFACE cxx_std_17)
-target_compile_definitions(${PROJECT_NAME}-dclp INTERFACE ${SINGLETON_DEFINITIONS})
-target_sources(${PROJECT_NAME}-dclp INTERFACE
+add_library(singleton-dclp INTERFACE)
+add_library(singleton::singleton-dclp ALIAS singleton-dclp)
+target_compile_features(singleton-dclp INTERFACE cxx_std_17)
+target_compile_definitions(singleton-dclp INTERFACE ${SINGLETON_DEFINITIONS})
+target_sources(singleton-dclp INTERFACE
     FILE_SET HEADERS
     BASE_DIRS ${SINGLETON_INCLUDE_DIR}
     FILES ${SINGLETON_INCLUDE_DIR}/singleton_dclp.hpp
@@ -39,14 +39,14 @@ target_sources(${PROJECT_NAME}-dclp INTERFACE
 # Install/Export targets
 include(GNUInstallDirs)
 install(
-    TARGETS ${PROJECT_NAME} ${PROJECT_NAME}-dclp
+    TARGETS singleton singleton-dclp
     FILE_SET HEADERS
     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
 )
 export(
-    TARGETS ${PROJECT_NAME} ${PROJECT_NAME}-dclp
-    NAMESPACE ${PROJECT_NAME}::
-    FILE ${PROJECT_BINARY_DIR}/${PROJECT_NAME}-targets.cmake
+    TARGETS singleton singleton-dclp
+    NAMESPACE singleton::
+    FILE ${PROJECT_BINARY_DIR}/singleton-targets.cmake
 )
 
 # Run a simple test
