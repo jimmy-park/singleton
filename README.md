@@ -28,6 +28,7 @@ int main()
 ### C++17
 
 Implement based on double-checked locking pattern (DCLP)
+
 Use this version when you need to control the destruction order manually or initialize with parameters
 
 - A few C++17 features are used
@@ -48,7 +49,7 @@ private:
 
 int main()
 {
-    Foo::Consturct(42)
+    Foo::Construct(42)
     Foo::GetInstance()->Bar();
     Foo::DestroyInstance();
 }
@@ -56,9 +57,9 @@ int main()
 
 #### Caveats
 
-- Do not call GetInstance() before Construct() and after DestroyInstance()
-- Must call DestroyInstance() before terminating program
-- Construct() is no-op once a singleton instance is created
+- Do not call `GetInstance()` before `Construct()` and after `DestroyInstance()`
+- Must call `DestroyInstance()` before terminating program
+- `Construct()` is no-op once a singleton instance is created
 
 ### Run in online compiler
 
