@@ -74,7 +74,7 @@ set(SINGLETON_INJECT_ABSTRACT_CLASS ON) # default : OFF
 include(FetchContent)
 FetchContent_Declare(
     singleton
-    URL https://github.com/jimmy-park/singleton/archive/1.0.0.zip
+    URL https://github.com/jimmy-park/singleton/archive/1.1.0.zip
 )
 FetchContent_MakeAvailable(singleton)
 
