@@ -8,15 +8,22 @@ public:
     Foo() { std::cout << "Foo\n"; }
     ~Foo() { std::cout << "~Foo\n"; }
 
-    void Hello() { std::cout << "Hello\n"; }
+    void Hello() const { std::cout << "Hello\n"; }
 };
 
 class Bar : public SingletonDclp<Bar> {
 public:
-    Bar() { std::cout << "Bar\n"; }
+    Bar(int n)
+        : n_ { n }
+    {
+        std::cout << "Bar initialized with " << n << "\n";
+    }
     ~Bar() { std::cout << "~Bar\n"; }
 
-    void Hello() { std::cout << "Hello\n"; }
+    int Get() const { return n_; }
+
+private:
+    int n_;
 };
 
 int main()
@@ -24,8 +31,15 @@ int main()
     // Compile error when SINGLETON_INJECT_ABSTRACT_CLASS is ON
     // Foo foo; Bar bar;
 
+    // Simple, C++11, but require default constructor only
     Foo::GetInstance().Hello();
-    Bar::GetInstance()->Hello();
+
+    // Must construct before GetInstance()
+    // Construct() after the first is no-op
+    Bar::Construct(42);
+    Bar::Construct(43);
+    Bar::GetInstance()->Get();
+    // Must destroy instance before terminating program
     Bar::DestroyInstance();
 
     return 0;

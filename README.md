@@ -1,10 +1,10 @@
-# C++11 Template Singleton Pattern
+# C++11/17 Template Singleton Pattern
 
 Implement a thread-safe singleton class using CRTP (Curiously Recurring Template Pattern)
 
 ## Usage
 
-### Basic
+### C++11
 
 Rely on initialization of static local variable
 
@@ -13,7 +13,7 @@ Rely on initialization of static local variable
 
 class Foo : public Singleton<Foo> {
 public:
-    void RunAnywhere() {}
+    void Bar() {}
 };
 
 int main()
@@ -21,32 +21,48 @@ int main()
     // Compile error when SINGLETON_INJECT_ABSTRACT_CLASS is ON
     // Foo foo;
 
-    Foo::GetInstance().RunAnywhere();
+    Foo::GetInstance().Bar();
 }
 ```
 
-[Compiler Explorer](https://godbolt.org/z/7K56adsz4)
-
-### When you need to control the destruction order manually
+### C++17
 
 Implement based on double-checked locking pattern (DCLP)
+Use this version when you need to control the destruction order manually or initialize with parameters
 
-Require C++17 due to inline static variable
+- A few C++17 features are used
+  - Inline static member variable
+  - If statements with initializer
 
 ```cpp
 #include <singleton_dclp.hpp>
 
 class Foo : public SingletonDclp<Foo> {
 public:
-    void RunAnywhere() {}
+    Foo(int n) : n_ { n } {}
+    void Bar() {}
+
+private:
+    int n_;
 };
 
 int main()
 {
-    Foo::GetInstance()->RunAnywhere();
+    Foo::Consturct(42)
+    Foo::GetInstance()->Bar();
     Foo::DestroyInstance();
 }
 ```
+
+#### Caveats
+
+- Do not call GetInstance() before Construct() and after DestroyInstance()
+- Must call DestroyInstance() before terminating program
+- Construct() is no-op once a singleton instance is created
+
+### Run in online compiler
+
+[Compiler Explorer](https://godbolt.org/z/KPhzvofYz)
 
 ### CMake integration
 

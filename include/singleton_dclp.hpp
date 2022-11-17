@@ -1,27 +1,30 @@
 #ifndef SINGLETON_DCLP_HPP_
 #define SINGLETON_DCLP_HPP_
 
+#include <cassert>
+
 #include <atomic>
 #include <mutex>
+#include <utility>
 
 #ifndef SINGLETON_INJECT_ABSTRACT_CLASS
 template <typename Derived>
 class SingletonDclp {
 public:
-    static Derived* GetInstance()
+    template <typename... Args>
+    static void Construct(Args&&... args)
     {
-        // Double-checked locking pattern (DCLP)
-        auto* instance = instance_.load(std::memory_order_acquire);
-        if (!instance) {
-            std::lock_guard lock { mutex_ };
-
-            instance = instance_.load(std::memory_order_relaxed);
-            if (!instance) {
-                instance = new Derived;
-                instance_.store(instance, std::memory_order_release);
+        if (!instance_.load(std::memory_order_acquire)) {
+            if (std::lock_guard lock { mutex_ }; !instance_.load(std::memory_order_relaxed)) {
+                instance_.store(new Derived { std::forward<Args>(args)... }, std::memory_order_release);
             }
         }
+    }
 
+    static Derived* GetInstance()
+    {
+        auto* instance = instance_.load(std::memory_order_acquire);
+        assert(instance);
         return instance;
     }
 
@@ -47,24 +50,25 @@ private:
 template <typename Derived>
 class SingletonDclp {
 public:
-    static Derived* GetInstance()
+    template <typename... Args>
+    static void Construct(Args&&... args)
     {
         struct Dummy : public Derived {
+            using Derived::Derived;
             void ProhibitConstructFromDerived() const override { }
         };
 
-        // Double-checked locking pattern (DCLP)
-        auto* instance = instance_.load(std::memory_order_acquire);
-        if (!instance) {
-            std::lock_guard lock { mutex_ };
-
-            instance = instance_.load(std::memory_order_relaxed);
-            if (!instance) {
-                instance = new Dummy;
-                instance_.store(instance, std::memory_order_release);
+        if (!instance_.load(std::memory_order_acquire)) {
+            if (std::lock_guard lock { mutex_ }; !instance_.load(std::memory_order_relaxed)) {
+                instance_.store(new Dummy { std::forward<Args>(args)... }, std::memory_order_release);
             }
         }
+    }
 
+    static Derived* GetInstance()
+    {
+        auto* instance = instance_.load(std::memory_order_acquire);
+        assert(instance);
         return instance;
     }
 
