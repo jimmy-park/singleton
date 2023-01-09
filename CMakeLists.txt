@@ -10,6 +10,7 @@ project(
 
 # Custom options
 option(SINGLETON_INJECT_ABSTRACT_CLASS "Prevent construction of derived class itself" OFF)
+option(SINGLETON_INSTALL "Install CMake targets" OFF)
 
 set(SINGLETON_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
 set(SINGLETON_DEFINITIONS "$<$<BOOL:${SINGLETON_INJECT_ABSTRACT_CLASS}>:SINGLETON_INJECT_ABSTRACT_CLASS>")
@@ -37,17 +38,31 @@ target_sources(singleton-dclp INTERFACE
 )
 
 # Install/Export targets
-include(GNUInstallDirs)
-install(
-    TARGETS singleton singleton-dclp
-    FILE_SET HEADERS
-    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-)
-export(
-    TARGETS singleton singleton-dclp
-    NAMESPACE singleton::
-    FILE ${PROJECT_BINARY_DIR}/singleton-targets.cmake
-)
+if(SINGLETON_INSTALL)
+    include(CMakePackageConfigHelpers)
+    include(GNUInstallDirs)
+
+    write_basic_package_version_file(
+        ${CMAKE_CURRENT_BINARY_DIR}/singleton-config-version.cmake
+        COMPATIBILITY SameMajorVersion
+    )
+    install(
+        TARGETS singleton singleton-dclp
+        EXPORT singletonTargets
+        FILE_SET HEADERS
+    )
+    install(
+        EXPORT singletonTargets
+        NAMESPACE singleton::
+        DESTINATION ${CMAKE_INSTALL_DATADIR}/singleton
+    )
+    install(
+        FILES
+        ${CMAKE_CURRENT_SOURCE_DIR}/cmake/singleton-config.cmake
+        ${CMAKE_CURRENT_BINARY_DIR}/singleton-config-version.cmake
+        DESTINATION ${CMAKE_INSTALL_DATADIR}/singleton
+    )
+endif()
 
 # Run a simple test
 if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
