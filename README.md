@@ -1,6 +1,6 @@
 # C++11/17 Template Singleton Pattern
 
-Implement a thread-safe singleton class using CRTP (Curiously Recurring Template Pattern)
+Implement a thread-safe singleton class using [Curiously Recurring Template Pattern (CRTP)](https://en.wikipedia.org/wiki/Curiously_recurring_template_pattern)
 
 ## Usage
 
@@ -27,7 +27,7 @@ int main()
 
 ### C++17
 
-Implement based on double-checked locking pattern (DCLP)
+Implement based on [Double-Checked Locking Pattern (DCLP)](https://en.wikipedia.org/wiki/Double-checked_locking)
 
 Use this version when you need to control the destruction order manually or initialize with parameters
 
@@ -63,19 +63,21 @@ int main()
 
 ### Run in online compiler
 
-[Compiler Explorer](https://godbolt.org/z/KPhzvofYz)
+[Compiler Explorer](https://godbolt.org/z/G7j3P17zE)
 
-### CMake integration
+### CMake Integration
 
 Require CMake 3.23+ due to `target_sources(FILE_SET)`
 
 ```CMake
-set(SINGLETON_INJECT_ABSTRACT_CLASS ON) # default : OFF
-
 include(FetchContent)
+
+set(SINGLETON_INJECT_ABSTRACT_CLASS ON) # default : OFF
+set(SINGLETON_INSTALL ON)               # default : OFF
+
 FetchContent_Declare(
     singleton
-    URL https://github.com/jimmy-park/singleton/archive/1.1.0.zip
+    URL https://github.com/jimmy-park/singleton/archive/1.1.1.zip
 )
 FetchContent_MakeAvailable(singleton)
 
