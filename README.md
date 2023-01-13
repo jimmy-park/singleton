@@ -77,9 +77,18 @@ set(SINGLETON_INSTALL ON)               # default : OFF
 
 FetchContent_Declare(
     singleton
-    URL https://github.com/jimmy-park/singleton/archive/1.1.1.zip
+    URL https://github.com/jimmy-park/singleton/archive/1.1.1.tar.gz
 )
 FetchContent_MakeAvailable(singleton)
+
+# If you're using CPM.cmake
+# CPMAddPackage(
+#     NAME singleton
+#     URL https://github.com/jimmy-park/singleton/archive/1.1.1.tar.gz
+#     OPTIONS
+#     "SINGLETON_INJECT_ABSTRACT_CLASS ON"
+#     "SINGLETON_INSTALL ON"
+# )
 
 add_executable(main main.cpp)
 target_link_libraries(main PRIVATE singleton::singleton) # or singleton::singleton-dclp
