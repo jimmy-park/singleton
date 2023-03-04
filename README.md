@@ -77,14 +77,14 @@ set(SINGLETON_INSTALL ON)               # default : OFF
 
 FetchContent_Declare(
     singleton
-    URL https://github.com/jimmy-park/singleton/archive/1.1.1.tar.gz
+    URL https://github.com/jimmy-park/singleton/archive/main.tar.gz
 )
 FetchContent_MakeAvailable(singleton)
 
 # If you're using CPM.cmake
 # CPMAddPackage(
 #     NAME singleton
-#     URL https://github.com/jimmy-park/singleton/archive/1.1.1.tar.gz
+#     URL https://github.com/jimmy-park/singleton/archive/main.tar.gz
 #     OPTIONS
 #     "SINGLETON_INJECT_ABSTRACT_CLASS ON"
 #     "SINGLETON_INSTALL ON"
