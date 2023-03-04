@@ -59,13 +59,13 @@ if(SINGLETON_INSTALL)
     install(
         EXPORT singletonTargets
         NAMESPACE singleton::
-        DESTINATION ${CMAKE_INSTALL_DATADIR}/singleton
+        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/singleton
     )
     install(
         FILES
         ${CMAKE_CURRENT_SOURCE_DIR}/cmake/singleton-config.cmake
         ${CMAKE_CURRENT_BINARY_DIR}/singleton-config-version.cmake
-        DESTINATION ${CMAKE_INSTALL_DATADIR}/singleton
+        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/singleton
     )
 endif()
 
