@@ -4,34 +4,9 @@
         "major": 3,
         "minor": 23
     },
-    "configurePresets": [
-        {
-            "name": "base",
-            "binaryDir": "${sourceDir}/build/${presetName}",
-            "installDir": "${sourceDir}/install/${presetName}",
-            "cmakeExecutable": "cmake",
-            "cacheVariables": {
-                "CMAKE_MODULE_PATH": "${sourceDir}/cmake"
-            }
-        }
-    ],
-    "buildPresets": [
-        {
-            "name": "base",
-            "configuration": "Release",
-            "configurePreset": "base"
-        },
-        {
-            "name": "base-clean",
-            "configuration": "Release",
-            "configurePreset": "base",
-            "targets": "clean"
-        },
-        {
-            "name": "base-install",
-            "configuration": "Release",
-            "configurePreset": "base",
-            "targets": "install"
-        }
+    "include": [
+        "cmake/preset/linux.json",
+        "cmake/preset/macos.json",
+        "cmake/preset/windows.json"
     ]
 }

@@ -1,0 +1,44 @@
+{
+    "version": 4,
+    "include": [
+        "base.json"
+    ],
+    "configurePresets": [
+        {
+            "name": "windows",
+            "inherits": [
+                "host-windows",
+                "vs2022",
+                "default"
+            ]
+        }
+    ],
+    "buildPresets": [
+        {
+            "name": "windows",
+            "configurePreset": "windows",
+            "inherits": [
+                "host-windows",
+                "release"
+            ]
+        },
+        {
+            "name": "windows-clean",
+            "configurePreset": "windows",
+            "inherits": [
+                "host-windows",
+                "release",
+                "clean"
+            ]
+        },
+        {
+            "name": "windows-install",
+            "configurePreset": "windows",
+            "inherits": [
+                "host-windows",
+                "release",
+                "install"
+            ]
+        }
+    ]
+}

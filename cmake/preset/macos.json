@@ -1,0 +1,44 @@
+{
+    "version": 4,
+    "include": [
+        "base.json"
+    ],
+    "configurePresets": [
+        {
+            "name": "macos",
+            "inherits": [
+                "host-macos",
+                "xcode",
+                "default"
+            ]
+        }
+    ],
+    "buildPresets": [
+        {
+            "name": "macos",
+            "configurePreset": "macos",
+            "inherits": [
+                "host-macos",
+                "release"
+            ]
+        },
+        {
+            "name": "macos-clean",
+            "configurePreset": "macos",
+            "inherits": [
+                "host-macos",
+                "release",
+                "clean"
+            ]
+        },
+        {
+            "name": "macos-install",
+            "configurePreset": "macos",
+            "inherits": [
+                "host-macos",
+                "release",
+                "install"
+            ]
+        }
+    ]
+}
