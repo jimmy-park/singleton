@@ -49,7 +49,7 @@ private:
 
 int main()
 {
-    Foo::Construct(42)
+    Foo::Construct(42);
     Foo::GetInstance()->Bar();
     Foo::DestroyInstance();
 }

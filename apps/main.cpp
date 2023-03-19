@@ -34,12 +34,9 @@ int main()
     // Simple, C++11, but require default constructor only
     Foo::GetInstance().Hello();
 
-    // Must construct before GetInstance()
-    // Construct() after the first is no-op
+    // Support constructor (C++17)
     Bar::Construct(42);
-    Bar::Construct(43);
     Bar::GetInstance()->Get();
-    // Must destroy instance before terminating program
     Bar::DestroyInstance();
 
     return 0;
