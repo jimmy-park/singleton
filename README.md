@@ -1,5 +1,7 @@
 # C++11/17 Template Singleton Pattern
 
+[![CI](https://github.com/jimmy-park/singleton/actions/workflows/ci.yaml/badge.svg)](https://github.com/jimmy-park/singleton/actions/workflows/ci.yaml)
+
 Implement a thread-safe singleton class using [Curiously Recurring Template Pattern (CRTP)](https://en.wikipedia.org/wiki/Curiously_recurring_template_pattern)
 
 ## Usage
