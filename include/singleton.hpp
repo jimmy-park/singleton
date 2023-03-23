@@ -39,7 +39,7 @@ protected:
     Singleton(Singleton&&) noexcept = delete;
     Singleton& operator=(const Singleton&) = delete;
     Singleton& operator=(Singleton&&) noexcept = delete;
-    ~Singleton() = default;
+    virtual ~Singleton() = default;
 
 private:
     virtual void ProhibitConstructFromDerived() const = 0;
