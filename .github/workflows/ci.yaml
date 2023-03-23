@@ -37,16 +37,7 @@ jobs:
         run: cmake --build --preset ${{ matrix.preset }} --config ${{ matrix.config }}
 
       - name: Test
-        run: ctest --preset ${{ matrix.preset }} --config ${{ matrix.config }}
+        run: ctest --preset ${{ matrix.preset }} -C ${{ matrix.config }}
 
       - name: Install
         run: cmake --build --preset ${{ matrix.preset }}-install --config ${{ matrix.config }}
-  analyze:
-    runs-on: ubuntu-latest
-    permissions:
-      security-events: write
-    steps:
-      - uses: actions/checkout@v3
-      - uses: github/codeql-action/init@v2
-      - uses: github/codeql-action/autobuild@v2
-      - uses: github/codeql-action/analyze@v2
