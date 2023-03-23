@@ -18,8 +18,7 @@
             "name": "windows",
             "configurePreset": "windows",
             "inherits": [
-                "host-windows",
-                "release"
+                "host-windows"
             ]
         },
         {
@@ -27,7 +26,6 @@
             "configurePreset": "windows",
             "inherits": [
                 "host-windows",
-                "release",
                 "clean"
             ]
         },
@@ -36,8 +34,17 @@
             "configurePreset": "windows",
             "inherits": [
                 "host-windows",
-                "release",
                 "install"
+            ]
+        }
+    ],
+    "testPresets": [
+        {
+            "name": "windows",
+            "configurePreset": "windows",
+            "inherits": [
+                "host-windows",
+                "options"
             ]
         }
     ]

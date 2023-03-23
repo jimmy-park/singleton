@@ -18,8 +18,7 @@
             "name": "macos",
             "configurePreset": "macos",
             "inherits": [
-                "host-macos",
-                "release"
+                "host-macos"
             ]
         },
         {
@@ -27,7 +26,6 @@
             "configurePreset": "macos",
             "inherits": [
                 "host-macos",
-                "release",
                 "clean"
             ]
         },
@@ -36,8 +34,17 @@
             "configurePreset": "macos",
             "inherits": [
                 "host-macos",
-                "release",
                 "install"
+            ]
+        }
+    ],
+    "testPresets": [
+        {
+            "name": "macos",
+            "configurePreset": "macos",
+            "inherits": [
+                "host-macos",
+                "options"
             ]
         }
     ]

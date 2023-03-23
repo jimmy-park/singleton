@@ -61,6 +61,20 @@
             "name": "xcode",
             "hidden": true,
             "generator": "Xcode"
+        },
+        {
+            "name": "clang",
+            "hidden": true,
+            "cacheVariables": {
+                "CMAKE_CXX_COMPILER": "clang++"
+            }
+        },
+        {
+            "name": "gcc",
+            "hidden": true,
+            "cacheVariables": {
+                "CMAKE_CXX_COMPILER": "g++"
+            }
         }
     ],
     "buildPresets": [
@@ -92,16 +106,6 @@
             }
         },
         {
-            "name": "debug",
-            "hidden": true,
-            "configuration": "Debug"
-        },
-        {
-            "name": "release",
-            "hidden": true,
-            "configuration": "Release"
-        },
-        {
             "name": "clean",
             "hidden": true,
             "targets": "clean"
@@ -110,6 +114,42 @@
             "name": "install",
             "hidden": true,
             "targets": "install"
+        }
+    ],
+    "testPresets": [
+        {
+            "name": "host-linux",
+            "hidden": true,
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Linux"
+            }
+        },
+        {
+            "name": "host-macos",
+            "hidden": true,
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Darwin"
+            }
+        },
+        {
+            "name": "host-windows",
+            "hidden": true,
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Windows"
+            }
+        },
+        {
+            "name": "options",
+            "hidden": true,
+            "output": {
+                "verbosity": "verbose"
+            }
         }
     ]
 }

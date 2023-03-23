@@ -5,39 +5,87 @@
     ],
     "configurePresets": [
         {
-            "name": "linux",
+            "name": "linux-clang",
             "inherits": [
                 "host-linux",
                 "ninja",
+                "clang",
+                "default"
+            ]
+        },
+        {
+            "name": "linux-gcc",
+            "inherits": [
+                "host-linux",
+                "ninja",
+                "gcc",
                 "default"
             ]
         }
     ],
     "buildPresets": [
         {
-            "name": "linux",
-            "configurePreset": "linux",
+            "name": "linux-clang",
+            "configurePreset": "linux-clang",
             "inherits": [
-                "host-linux",
-                "release"
+                "host-linux"
             ]
         },
         {
-            "name": "linux-clean",
-            "configurePreset": "linux",
+            "name": "linux-clang-clean",
+            "configurePreset": "linux-clang",
             "inherits": [
                 "host-linux",
-                "release",
                 "clean"
             ]
         },
         {
-            "name": "linux-install",
-            "configurePreset": "linux",
+            "name": "linux-clang-install",
+            "configurePreset": "linux-clang",
             "inherits": [
                 "host-linux",
-                "release",
                 "install"
+            ]
+        },
+        {
+            "name": "linux-gcc",
+            "configurePreset": "linux-gcc",
+            "inherits": [
+                "host-linux"
+            ]
+        },
+        {
+            "name": "linux-gcc-clean",
+            "configurePreset": "linux-gcc",
+            "inherits": [
+                "host-linux",
+                "clean"
+            ]
+        },
+        {
+            "name": "linux-gcc-install",
+            "configurePreset": "linux-gcc",
+            "inherits": [
+                "host-linux",
+                "install"
+            ]
+        }
+    ],
+    "testPresets": [
+        {
+            "name": "linux-clang",
+            "configurePreset": "linux-clang",
+            "inherits": [
+                "host-linux",
+                "options"
+            ]
+        },
+        {
+            "name": "linux-gcc",
+            "configurePreset": "linux-gcc",
+            "inherits": [
+                "host-linux",
+                "options"
             ]
         }
     ]
