@@ -9,30 +9,43 @@ project(
 )
 
 # Custom options
+option(SINGLETON_COMPILE "Build as a static/shared library" OFF)
 option(SINGLETON_INJECT_ABSTRACT_CLASS "Prevent construction of derived class itself" OFF)
-option(SINGLETON_INSTALL "Install CMake targets" OFF)
+option(SINGLETON_INSTALL "Install headers and CMake targets" OFF)
+
+include(cmake/CompileOptions.cmake)
+
+if(SINGLETON_COMPILE)
+    set(SCOPE PUBLIC)
+    file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/singleton.cpp "#include <singleton.hpp>")
+    file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/singleton_dclp.cpp "#include <singleton_dclp.hpp>")
+    add_library(singleton ${CMAKE_CURRENT_BINARY_DIR}/singleton.cpp)
+    add_library(singleton-dclp ${CMAKE_CURRENT_BINARY_DIR}/singleton_dclp.cpp)
+else()
+    set(SCOPE INTERFACE)
+    add_library(singleton INTERFACE)
+    add_library(singleton-dclp INTERFACE)
+endif()
 
 # Create a singleton target
-add_library(singleton INTERFACE)
 add_library(singleton::singleton ALIAS singleton)
-target_compile_features(singleton INTERFACE cxx_std_11)
-target_compile_definitions(singleton INTERFACE
+target_compile_features(singleton ${SCOPE} cxx_std_11)
+target_compile_definitions(singleton ${SCOPE}
     $<$<BOOL:${SINGLETON_INJECT_ABSTRACT_CLASS}>:SINGLETON_INJECT_ABSTRACT_CLASS>
 )
-target_sources(singleton INTERFACE
+target_sources(singleton ${SCOPE}
     FILE_SET HEADERS
     BASE_DIRS include
     FILES include/singleton.hpp
 )
 
 # Create a singleton-dclp target
-add_library(singleton-dclp INTERFACE)
 add_library(singleton::singleton-dclp ALIAS singleton-dclp)
-target_compile_features(singleton-dclp INTERFACE cxx_std_17)
-target_compile_definitions(singleton-dclp INTERFACE
+target_compile_features(singleton-dclp ${SCOPE} cxx_std_17)
+target_compile_definitions(singleton-dclp ${SCOPE}
     $<$<BOOL:${SINGLETON_INJECT_ABSTRACT_CLASS}>:SINGLETON_INJECT_ABSTRACT_CLASS>
 )
-target_sources(singleton-dclp INTERFACE
+target_sources(singleton-dclp ${SCOPE}
     FILE_SET HEADERS
     BASE_DIRS include
     FILES include/singleton_dclp.hpp
