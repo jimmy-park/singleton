@@ -1,17 +1,38 @@
 name: CI
-on:
-  push:
-    branches: ["**"]
-    tags-ignore: ["**"]
-  pull_request:
-    branches: ["**"]
+
+on: [push, pull_request]
+
 jobs:
   build:
     strategy:
+      fail-fast: false
       matrix:
-        preset: [linux-clang, linux-gcc, macos, windows]
+        preset:
+          - android-arm
+          - android-arm64
+          - android-x86
+          - android-x86_64
+          - ios
+          - ios_sim
+          - linux-clang
+          - linux-gcc
+          - macos
+          - windows
         config: [Debug, Release]
+        abstract: [OFF, ON]
         include:
+          - preset: android-arm
+            os: ubuntu-latest
+          - preset: android-arm64
+            os: ubuntu-latest
+          - preset: android-x86
+            os: ubuntu-latest
+          - preset: android-x86_64
+            os: ubuntu-latest
+          - preset: ios
+            os: macos-latest
+          - preset: ios_sim
+            os: macos-latest
           - preset: linux-clang
             os: ubuntu-latest
           - preset: linux-gcc
@@ -24,19 +45,23 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Install dependencies
+      - name: Install dependencies on Linux
         if: runner.os == 'Linux'
         run: |
           sudo apt-get update
           sudo apt-get install -y ninja-build
 
       - name: Configure CMake
-        run: cmake --preset ${{ matrix.preset }}
+        run: >
+          cmake --preset ${{ matrix.preset }}
+          -DSINGLETON_COMPILE=ON
+          -DSINGLETON_INJECT_ABSTRACT_CLASS=${{ matrix.abstract }}
 
       - name: Build
         run: cmake --build --preset ${{ matrix.preset }} --config ${{ matrix.config }}
 
       - name: Test
+        if: contains(fromJSON('["linux-clang", "linux-gcc", "macos", "windows"]'), matrix.preset)
         run: ctest --preset ${{ matrix.preset }} -C ${{ matrix.config }}
 
       - name: Install

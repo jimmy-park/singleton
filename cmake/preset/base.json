@@ -8,7 +8,6 @@
             "installDir": "${sourceDir}/install/${presetName}",
             "cmakeExecutable": "cmake",
             "cacheVariables": {
-                "SINGLETON_INJECT_ABSTRACT_CLASS": true,
                 "SINGLETON_INSTALL": true
             }
         },
@@ -40,6 +39,72 @@
             }
         },
         {
+            "name": "host-not-windows",
+            "hidden": true,
+            "condition": {
+                "type": "notEquals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Windows"
+            }
+        },
+        {
+            "name": "target-ios",
+            "hidden": true,
+            "toolchainFile": "${sourceDir}/cmake/toolchain/ios.cmake",
+            "cacheVariables": {
+                "CMAKE_OSX_SYSROOT": "iphoneos"
+            }
+        },
+        {
+            "name": "target-ios_sim",
+            "hidden": true,
+            "toolchainFile": "${sourceDir}/cmake/toolchain/ios.cmake",
+            "cacheVariables": {
+                "CMAKE_OSX_SYSROOT": "iphonesimulator"
+            }
+        },
+        {
+            "name": "target-android",
+            "hidden": true,
+            "toolchainFile": "$env{ANDROID_NDK}/build/cmake/android.toolchain.cmake",
+            "cacheVariables": {
+                "ANDROID_NDK": "$env{ANDROID_NDK}",
+                "ANDROID_PLATFORM": "android-33"
+            }
+        },
+        {
+            "name": "target-android-arm",
+            "hidden": true,
+            "inherits": "target-android",
+            "cacheVariables": {
+                "ANDROID_ABI": "armeabi-v7a"
+            }
+        },
+        {
+            "name": "target-android-arm64",
+            "hidden": true,
+            "inherits": "target-android",
+            "cacheVariables": {
+                "ANDROID_ABI": "arm64-v8a"
+            }
+        },
+        {
+            "name": "target-android-x86",
+            "hidden": true,
+            "inherits": "target-android",
+            "cacheVariables": {
+                "ANDROID_ABI": "x86"
+            }
+        },
+        {
+            "name": "target-android-x86_64",
+            "hidden": true,
+            "inherits": "target-android",
+            "cacheVariables": {
+                "ANDROID_ABI": "x86_64"
+            }
+        },
+        {
             "name": "vs2022",
             "hidden": true,
             "generator": "Visual Studio 17 2022",
@@ -66,6 +131,7 @@
             "name": "clang",
             "hidden": true,
             "cacheVariables": {
+                "CMAKE_C_COMPILER": "clang",
                 "CMAKE_CXX_COMPILER": "clang++"
             }
         },
@@ -73,6 +139,7 @@
             "name": "gcc",
             "hidden": true,
             "cacheVariables": {
+                "CMAKE_C_COMPILER": "gcc",
                 "CMAKE_CXX_COMPILER": "g++"
             }
         }
@@ -101,6 +168,15 @@
             "hidden": true,
             "condition": {
                 "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Windows"
+            }
+        },
+        {
+            "name": "host-not-windows",
+            "hidden": true,
+            "condition": {
+                "type": "notEquals",
                 "lhs": "${hostSystemName}",
                 "rhs": "Windows"
             }
@@ -140,6 +216,15 @@
             "hidden": true,
             "condition": {
                 "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Windows"
+            }
+        },
+        {
+            "name": "host-not-windows",
+            "hidden": true,
+            "condition": {
+                "type": "notEquals",
                 "lhs": "${hostSystemName}",
                 "rhs": "Windows"
             }

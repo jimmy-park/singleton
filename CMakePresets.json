@@ -5,6 +5,8 @@
         "minor": 23
     },
     "include": [
+        "cmake/preset/android.json",
+        "cmake/preset/ios.json",
         "cmake/preset/linux.json",
         "cmake/preset/macos.json",
         "cmake/preset/windows.json"
