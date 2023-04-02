@@ -66,7 +66,7 @@ int main()
 
 ### Run in online compiler
 
-[Compiler Explorer](https://godbolt.org/z/G7j3P17zE)
+[Compiler Explorer](https://godbolt.org/z/P767Ee3Yq)
 
 ### CMake Integration
 
