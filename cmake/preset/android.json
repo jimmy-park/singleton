@@ -5,6 +5,15 @@
     ],
     "configurePresets": [
         {
+            "name": "android",
+            "inherits": [
+                "host-not-windows",
+                "target-android",
+                "ninja",
+                "default"
+            ]
+        },
+        {
             "name": "android-arm",
             "inherits": [
                 "host-not-windows",
@@ -42,6 +51,29 @@
         }
     ],
     "buildPresets": [
+        {
+            "name": "android",
+            "configurePreset": "android",
+            "inherits": [
+                "host-not-windows"
+            ]
+        },
+        {
+            "name": "android-clean",
+            "configurePreset": "android",
+            "inherits": [
+                "host-not-windows",
+                "clean"
+            ]
+        },
+        {
+            "name": "android-install",
+            "configurePreset": "android",
+            "inherits": [
+                "host-not-windows",
+                "install"
+            ]
+        },
         {
             "name": "android-arm",
             "configurePreset": "android-arm",

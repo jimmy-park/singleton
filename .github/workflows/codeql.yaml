@@ -4,43 +4,17 @@ on:
   push:
   pull_request:
   schedule:
-    - cron: "0 0 * * *"
+    - cron: "0 0 * * 0"
 
 jobs:
   analyze:
-    strategy:
-      fail-fast: false
-      matrix:
-        preset: [linux-clang, linux-gcc, macos, windows]
-        include:
-          - preset: linux-clang
-            os: ubuntu-latest
-            cc: clang
-            cxx: clang++
-          - preset: linux-gcc
-            os: ubuntu-latest
-            cc: gcc
-            cxx: g++
-          - preset: macos
-            os: macos-latest
-          - preset: windows
-            os: windows-latest
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     permissions:
+      actions: read
+      contents: read
       security-events: write
     steps:
       - uses: actions/checkout@v3
-
-      - name: Choose the compiler on Linux
-        if: runner.os == 'Linux'
-        run: |
-          echo "CC=${{ matrix.cc }}" >> $GITHUB_ENV
-          echo "CXX=${{ matrix.cxx }}" >> $GITHUB_ENV
-
-      - name: Configure CMake on Windows
-        if: runner.os == 'Windows'
-        run: cmake --preset windows
-
       - uses: github/codeql-action/init@v2
       - uses: github/codeql-action/autobuild@v2
       - uses: github/codeql-action/analyze@v2

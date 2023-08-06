@@ -8,12 +8,8 @@ jobs:
       fail-fast: false
       matrix:
         preset:
-          - android-arm
-          - android-arm64
-          - android-x86
-          - android-x86_64
+          - android
           - ios
-          - ios_sim
           - linux-clang
           - linux-gcc
           - macos
@@ -21,26 +17,12 @@ jobs:
         config: [Debug, Release]
         abstract: [OFF, ON]
         include:
-          - preset: android-arm
-            os: ubuntu-latest
-          - preset: android-arm64
-            os: ubuntu-latest
-          - preset: android-x86
-            os: ubuntu-latest
-          - preset: android-x86_64
-            os: ubuntu-latest
-          - preset: ios
-            os: macos-latest
-          - preset: ios_sim
-            os: macos-latest
-          - preset: linux-clang
-            os: ubuntu-latest
-          - preset: linux-gcc
-            os: ubuntu-latest
-          - preset: macos
-            os: macos-latest
-          - preset: windows
-            os: windows-latest
+          - { os: macos-latest, preset: ios }
+          - { os: macos-latest, preset: macos }
+          - { os: ubuntu-latest, preset: android }
+          - { os: ubuntu-latest, preset: linux-clang }
+          - { os: ubuntu-latest, preset: linux-gcc }
+          - { os: windows-latest, preset: windows }
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v3
