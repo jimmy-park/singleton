@@ -8,6 +8,7 @@
             "name": "macos",
             "inherits": [
                 "host-macos",
+                "target-macos",
                 "xcode",
                 "default"
             ]
@@ -19,22 +20,6 @@
             "configurePreset": "macos",
             "inherits": [
                 "host-macos"
-            ]
-        },
-        {
-            "name": "macos-clean",
-            "configurePreset": "macos",
-            "inherits": [
-                "host-macos",
-                "clean"
-            ]
-        },
-        {
-            "name": "macos-install",
-            "configurePreset": "macos",
-            "inherits": [
-                "host-macos",
-                "install"
             ]
         }
     ],

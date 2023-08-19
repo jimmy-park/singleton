@@ -48,22 +48,12 @@
             }
         },
         {
-            "name": "target-ios",
-            "hidden": true,
-            "toolchainFile": "${sourceDir}/cmake/toolchain/ios.cmake"
-        },
-        {
-            "name": "target-ios_sim",
-            "hidden": true,
-            "toolchainFile": "${sourceDir}/cmake/toolchain/ios_sim.cmake"
-        },
-        {
             "name": "target-android",
             "hidden": true,
             "toolchainFile": "$env{ANDROID_NDK}/build/cmake/android.toolchain.cmake",
             "cacheVariables": {
                 "ANDROID_NDK": "$env{ANDROID_NDK}",
-                "ANDROID_PLATFORM": "android-33"
+                "ANDROID_PLATFORM": "android-27"
             }
         },
         {
@@ -99,12 +89,57 @@
             }
         },
         {
-            "name": "vs2022",
+            "name": "target-ios",
             "hidden": true,
-            "generator": "Visual Studio 17 2022",
-            "toolset": {
-                "value": "host=x64",
-                "strategy": "set"
+            "toolchainFile": "${sourceDir}/cmake/toolchain/ios.cmake"
+        },
+        {
+            "name": "target-ios_sim",
+            "hidden": true,
+            "toolchainFile": "${sourceDir}/cmake/toolchain/ios_sim.cmake"
+        },
+        {
+            "name": "target-linux",
+            "hidden": true
+        },
+        {
+            "name": "target-macos",
+            "hidden": true
+        },
+        {
+            "name": "target-windows",
+            "hidden": true
+        },
+        {
+            "name": "target-windows-arm",
+            "hidden": true,
+            "inherits": "target-windows",
+            "architecture": {
+                "value": "ARM"
+            }
+        },
+        {
+            "name": "target-windows-arm64",
+            "hidden": true,
+            "inherits": "target-windows",
+            "architecture": {
+                "value": "ARM64"
+            }
+        },
+        {
+            "name": "target-windows-x86",
+            "hidden": true,
+            "inherits": "target-windows",
+            "architecture": {
+                "value": "Win32"
+            }
+        },
+        {
+            "name": "target-windows-x86_64",
+            "hidden": true,
+            "inherits": "target-windows",
+            "architecture": {
+                "value": "x64"
             }
         },
         {
@@ -114,6 +149,15 @@
             "cacheVariables": {
                 "CMAKE_COLOR_DIAGNOSTICS": true,
                 "CMAKE_EXPORT_COMPILE_COMMANDS": true
+            }
+        },
+        {
+            "name": "vs2022",
+            "hidden": true,
+            "generator": "Visual Studio 17 2022",
+            "toolset": {
+                "value": "host=x64",
+                "strategy": "set"
             }
         },
         {
@@ -174,16 +218,6 @@
                 "lhs": "${hostSystemName}",
                 "rhs": "Windows"
             }
-        },
-        {
-            "name": "clean",
-            "hidden": true,
-            "targets": "clean"
-        },
-        {
-            "name": "install",
-            "hidden": true,
-            "targets": "install"
         }
     ],
     "testPresets": [
@@ -226,6 +260,7 @@
         {
             "name": "options",
             "hidden": true,
+            "configuration": "Debug",
             "output": {
                 "verbosity": "verbose"
             }

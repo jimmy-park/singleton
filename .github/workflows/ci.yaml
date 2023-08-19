@@ -7,13 +7,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        preset:
-          - android
-          - ios
-          - linux-clang
-          - linux-gcc
-          - macos
-          - windows
+        preset: [android, ios, linux-clang, linux-gcc, macos, windows]
         config: [Debug, Release]
         abstract: [OFF, ON]
         include:
@@ -47,4 +41,4 @@ jobs:
         run: ctest --preset ${{ matrix.preset }} -C ${{ matrix.config }}
 
       - name: Install
-        run: cmake --build --preset ${{ matrix.preset }}-install --config ${{ matrix.config }}
+        run: cmake --build --preset ${{ matrix.preset }} --config ${{ matrix.config }} -t install
