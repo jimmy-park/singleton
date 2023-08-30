@@ -28,7 +28,7 @@ private:
 
 int main()
 {
-    // Compile error when SINGLETON_INJECT_ABSTRACT_CLASS is ON
+    // Compile error when SINGLETON_INJECT_ABSTRACT_CLASS is defined
     // Foo foo; Bar bar;
 
     // Simple, C++11, but require default constructor only
@@ -37,7 +37,7 @@ int main()
     // Support constructor (C++17)
     Bar::Construct(42);
     Bar::GetInstance()->Get();
-    Bar::DestroyInstance();
+    Bar::Destruct();
 
     return 0;
 }

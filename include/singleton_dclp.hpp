@@ -14,9 +14,23 @@ public:
     template <typename... Args>
     static void Construct(Args&&... args)
     {
-        if (!instance_.load(std::memory_order_acquire)) {
-            if (std::lock_guard lock { mutex_ }; !instance_.load(std::memory_order_relaxed)) {
+        if (auto* instance = instance_.load(std::memory_order_acquire); !instance) {
+            std::lock_guard lock { mutex_ };
+
+            if (instance = instance_.load(std::memory_order_relaxed); !instance) {
                 instance_.store(new Derived { std::forward<Args>(args)... }, std::memory_order_release);
+            }
+        }
+    }
+
+    static void Destruct()
+    {
+        if (auto* instance = instance_.load(std::memory_order_acquire); instance) {
+            std::lock_guard lock { mutex_ };
+
+            if (instance = instance_.load(std::memory_order_relaxed); instance) {
+                delete instance;
+                instance_.store(nullptr, std::memory_order_release);
             }
         }
     }
@@ -26,12 +40,6 @@ public:
         auto* instance = instance_.load(std::memory_order_acquire);
         assert(instance);
         return instance;
-    }
-
-    static void DestroyInstance()
-    {
-        if (auto* instance = instance_.exchange(nullptr, std::memory_order_acq_rel))
-            delete instance;
     }
 
 protected:
@@ -58,9 +66,23 @@ public:
             void ProhibitConstructFromDerived() const override { }
         };
 
-        if (!instance_.load(std::memory_order_acquire)) {
-            if (std::lock_guard lock { mutex_ }; !instance_.load(std::memory_order_relaxed)) {
+        if (auto* instance = instance_.load(std::memory_order_acquire); !instance) {
+            std::lock_guard lock { mutex_ };
+
+            if (instance = instance_.load(std::memory_order_relaxed); !instance) {
                 instance_.store(new Dummy { std::forward<Args>(args)... }, std::memory_order_release);
+            }
+        }
+    }
+
+    static void Destruct()
+    {
+        if (auto* instance = instance_.load(std::memory_order_acquire); instance) {
+            std::lock_guard lock { mutex_ };
+
+            if (instance = instance_.load(std::memory_order_relaxed); instance) {
+                delete instance;
+                instance_.store(nullptr, std::memory_order_release);
             }
         }
     }
@@ -70,12 +92,6 @@ public:
         auto* instance = instance_.load(std::memory_order_acquire);
         assert(instance);
         return instance;
-    }
-
-    static void DestroyInstance()
-    {
-        if (auto* instance = instance_.exchange(nullptr, std::memory_order_acq_rel))
-            delete instance;
     }
 
 protected:
