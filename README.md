@@ -8,7 +8,7 @@ Implement a thread-safe singleton class using [Curiously Recurring Template Patt
 ## CMake Options
 
 | Option                            | Default | Description                                  |
-| ---                               | ---     | ---                                          |
+| --------------------------------- | ------- | -------------------------------------------- |
 | `SINGLETON_COMPILE`               | `OFF`   | Build as a static/shared library             |
 | `SINGLETON_INJECT_ABSTRACT_CLASS` | `OFF`   | Prevent construction of derived class itself |
 | `SINGLETON_INSTALL`               | `OFF`   | Install headers and CMake targets            |
@@ -18,27 +18,14 @@ Implement a thread-safe singleton class using [Curiously Recurring Template Patt
 ### Build
 
 ```sh
-# List all presets
-cmake --list-presets all
-
-# Use a configure preset
-cmake --preset windows
-
-# Use a build preset
-# <configure-preset>-[clean|install]
-cmake --build --preset windows
-
-# Use a test preset
-ctest --preset windows
-
-# Use a build preset for install
-# equal to `cmake --build --preset windows --target install`
-cmake --build --preset windows-install
+cmake --list-presets all                    # List all CMake presets
+cmake --preset windows                      # Configure
+cmake --build --preset windows              # Build
+ctest --preset windows                      # Test
+cmake --build --preset windows -t install   # Install
 ```
 
 ### Integration
-
-Require CMake 3.23+ due to `target_sources(FILE_SET)`
 
 ```CMake
 include(FetchContent)
@@ -74,7 +61,7 @@ Rely on initialization of static local variable
 ```cpp
 #include <singleton.hpp>
 
-struct Foo : Singleton<Foo> {
+struct Foo : public Singleton<Foo> {
     void Bar() {}
 };
 
@@ -100,7 +87,7 @@ Use this version when you need to control the destruction order manually or init
 ```cpp
 #include <singleton_dclp.hpp>
 
-struct Foo : public SingletonDclp<Foo> {
+class Foo : public SingletonDclp<Foo> {
 public:
     Foo(int n) : n_ { n } {}
     void Bar() {}
@@ -113,15 +100,14 @@ int main()
 {
     Foo::Construct(42);
     Foo::GetInstance()->Bar();
-    Foo::DestroyInstance();
+    Foo::Destruct();
 }
 ```
 
 #### Caveats
 
-- Do not call `GetInstance()` before `Construct()` and after `DestroyInstance()`
-- Must call `DestroyInstance()` before terminating program
-- `Construct()` is no-op once a singleton instance is created
+- `GetInstance()` must be called between `Construct()` and `Destruct()`
+- Don't forget to call `Destruct()` before terminating program
 
 ## Reference
 
