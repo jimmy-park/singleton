@@ -5,6 +5,7 @@
 
 #include <atomic>
 #include <mutex>
+#include <shared_mutex>
 #include <utility>
 
 #ifndef SINGLETON_INJECT_ABSTRACT_CLASS
@@ -14,10 +15,10 @@ public:
     template <typename... Args>
     static void Construct(Args&&... args)
     {
-        if (auto* instance = instance_.load(std::memory_order_acquire); !instance) {
+        if (!instance_.load(std::memory_order_acquire)) {
             std::lock_guard lock { mutex_ };
 
-            if (instance = instance_.load(std::memory_order_relaxed); !instance) {
+            if (!instance_.load(std::memory_order_relaxed)) {
                 instance_.store(new Derived { std::forward<Args>(args)... }, std::memory_order_release);
             }
         }
@@ -25,10 +26,10 @@ public:
 
     static void Destruct()
     {
-        if (auto* instance = instance_.load(std::memory_order_acquire); instance) {
+        if (instance_.load(std::memory_order_acquire)) {
             std::lock_guard lock { mutex_ };
 
-            if (instance = instance_.load(std::memory_order_relaxed); instance) {
+            if (auto* instance = instance_.load(std::memory_order_relaxed); instance) {
                 delete instance;
                 instance_.store(nullptr, std::memory_order_release);
             }
@@ -38,7 +39,14 @@ public:
     static Derived* GetInstance()
     {
         auto* instance = instance_.load(std::memory_order_acquire);
-        assert(instance);
+
+        if (!instance) {
+            std::shared_lock lock { mutex_ };
+
+            instance = instance_.load(std::memory_order_relaxed);
+            assert(instance);
+        }
+
         return instance;
     }
 
@@ -52,7 +60,7 @@ protected:
 
 private:
     inline static std::atomic<Derived*> instance_ { nullptr };
-    inline static std::mutex mutex_;
+    inline static std::shared_mutex mutex_;
 };
 #else
 template <typename Derived>
@@ -66,10 +74,10 @@ public:
             void ProhibitConstructFromDerived() const override { }
         };
 
-        if (auto* instance = instance_.load(std::memory_order_acquire); !instance) {
+        if (!instance_.load(std::memory_order_acquire)) {
             std::lock_guard lock { mutex_ };
 
-            if (instance = instance_.load(std::memory_order_relaxed); !instance) {
+            if (!instance_.load(std::memory_order_relaxed)) {
                 instance_.store(new Dummy { std::forward<Args>(args)... }, std::memory_order_release);
             }
         }
@@ -77,10 +85,10 @@ public:
 
     static void Destruct()
     {
-        if (auto* instance = instance_.load(std::memory_order_acquire); instance) {
+        if (instance_.load(std::memory_order_acquire)) {
             std::lock_guard lock { mutex_ };
 
-            if (instance = instance_.load(std::memory_order_relaxed); instance) {
+            if (auto* instance = instance_.load(std::memory_order_relaxed); instance) {
                 delete instance;
                 instance_.store(nullptr, std::memory_order_release);
             }
@@ -90,7 +98,14 @@ public:
     static Derived* GetInstance()
     {
         auto* instance = instance_.load(std::memory_order_acquire);
-        assert(instance);
+
+        if (!instance) {
+            std::shared_lock lock { mutex_ };
+
+            instance = instance_.load(std::memory_order_relaxed);
+            assert(instance);
+        }
+
         return instance;
     }
 
@@ -106,7 +121,7 @@ private:
     virtual void ProhibitConstructFromDerived() const = 0;
 
     inline static std::atomic<Derived*> instance_ { nullptr };
-    inline static std::mutex mutex_;
+    inline static std::shared_mutex mutex_;
 };
 #endif // SINGLETON_INJECT_ABSTRACT_CLASS
 
