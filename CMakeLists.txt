@@ -19,12 +19,15 @@ if(SINGLETON_COMPILE)
     set(SCOPE PUBLIC)
     file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/singleton.cpp "#include <singleton.hpp>")
     file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/singleton_dclp.cpp "#include <singleton_dclp.hpp>")
+    file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/singleton_atomic.cpp "#include <singleton_atomic.hpp>")
     add_library(singleton ${CMAKE_CURRENT_BINARY_DIR}/singleton.cpp)
     add_library(singleton-dclp ${CMAKE_CURRENT_BINARY_DIR}/singleton_dclp.cpp)
+    add_library(singleton-atomic ${CMAKE_CURRENT_BINARY_DIR}/singleton_atomic.cpp)
 else()
     set(SCOPE INTERFACE)
     add_library(singleton INTERFACE)
     add_library(singleton-dclp INTERFACE)
+    add_library(singleton-atomic INTERFACE)
 endif()
 
 # Create a singleton target
@@ -51,6 +54,18 @@ target_sources(singleton-dclp ${SCOPE}
     FILES include/singleton_dclp.hpp
 )
 
+# Create a singleton-atomic target
+add_library(singleton::singleton-atomic ALIAS singleton-atomic)
+target_compile_features(singleton-atomic ${SCOPE} cxx_std_20)
+target_compile_definitions(singleton-atomic ${SCOPE}
+    $<$<BOOL:${SINGLETON_INJECT_ABSTRACT_CLASS}>:SINGLETON_INJECT_ABSTRACT_CLASS>
+)
+target_sources(singleton-atomic ${SCOPE}
+    FILE_SET HEADERS
+    BASE_DIRS include
+    FILES include/singleton_atomic.hpp
+)
+
 # Install/Export targets
 if(SINGLETON_INSTALL)
     include(CMakePackageConfigHelpers)
@@ -61,7 +76,7 @@ if(SINGLETON_INSTALL)
         COMPATIBILITY SameMajorVersion
     )
     install(
-        TARGETS singleton singleton-dclp
+        TARGETS singleton singleton-dclp singleton-atomic
         EXPORT singletonTargets
         FILE_SET HEADERS
     )

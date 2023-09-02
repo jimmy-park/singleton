@@ -1,6 +1,9 @@
+#include <chrono>
 #include <iostream>
+#include <thread>
 
 #include <singleton.hpp>
+#include <singleton_atomic.hpp>
 #include <singleton_dclp.hpp>
 
 class Foo : public Singleton<Foo> {
@@ -26,18 +29,45 @@ private:
     int n_;
 };
 
+class Baz : public SingletonAtomic<Baz> {
+public:
+    Baz(int n)
+        : n_ { n }
+    {
+        std::cout << "Baz initialized with " << n << "\n";
+    }
+    ~Baz() { std::cout << "~Baz\n"; }
+
+    void Get() const { std::cout << "Baz::Get " << n_ << "\n"; }
+
+private:
+    int n_;
+};
+
 int main()
 {
     // Compile error when SINGLETON_INJECT_ABSTRACT_CLASS is defined
-    // Foo foo; Bar bar;
+    // Foo foo; Bar bar; Baz baz;
 
-    // Simple, C++11, but require default constructor only
+    // C++11
+    // Simple, but default constructor only
     Foo::GetInstance().Hello();
 
-    // Support constructor (C++17)
-    Bar::Construct(42);
+    // C++17
+    // Support user-defined constructors
+    Bar::Construct(17);
     Bar::GetInstance()->Get();
     Bar::Destruct();
+
+    // C++20
+    // Support delayed construction
+    // Release automatically at program termination
+    std::thread t { [] {
+        std::this_thread::sleep_for(std::chrono::seconds { 1 });
+        Baz::Construct(20);
+    } };
+    Baz::GetInstance()->Get();
+    t.join();
 
     return 0;
 }

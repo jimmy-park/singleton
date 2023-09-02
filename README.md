@@ -3,7 +3,7 @@
 [![CI](https://github.com/jimmy-park/singleton/actions/workflows/ci.yaml/badge.svg)](https://github.com/jimmy-park/singleton/actions/workflows/ci.yaml)
 [![CodeQL](https://github.com/jimmy-park/singleton/actions/workflows/codeql.yaml/badge.svg)](https://github.com/jimmy-park/singleton/actions/workflows/codeql.yaml)
 
-Implement a thread-safe singleton class using [Curiously Recurring Template Pattern (CRTP)](https://en.wikipedia.org/wiki/Curiously_recurring_template_pattern)
+Implement thread-safe singleton classes using [Curiously Recurring Template Pattern (CRTP)](https://en.wikipedia.org/wiki/Curiously_recurring_template_pattern)
 
 ## CMake Options
 
@@ -78,11 +78,12 @@ int main()
 
 Implement based on [Double-Checked Locking Pattern (DCLP)](https://en.wikipedia.org/wiki/Double-checked_locking)
 
-Use this version when you need to control the destruction order manually or initialize with parameters
+Use this version when you need to control the construction/destruction order manually or initialize with parameters
 
-- A few C++17 features are used
+- C++17 features
   - Inline static member variable
   - If statements with initializer
+  - `std::shared_mutex`
 
 ```cpp
 #include <singleton_dclp.hpp>
@@ -98,7 +99,7 @@ private:
 
 int main()
 {
-    Foo::Construct(42);
+    Foo::Construct(17);
     Foo::GetInstance()->Bar();
     Foo::Destruct();
 }
@@ -108,6 +109,29 @@ int main()
 
 - `GetInstance()` must be called between `Construct()` and `Destruct()`
 - Don't forget to call `Destruct()` before terminating program
+
+### C++20
+
+Use `std::atomic::wait` to block `GetInstance()` during construction
+
+```cpp
+#include <singleton_atomic.hpp>
+
+class Foo : public SingletonAtomic<Foo> {
+public:
+    Foo(int n) {}
+    void Bar() {}
+};
+
+int main()
+{
+    std::jthread t { [] {
+        std::this_thread::sleep_for(std::chrono::seconds { 1 });
+        Foo::Construct(20);
+    } };                        // Construct in another thread
+    Foo::GetInstance()->Bar();  // Block until construction is finished
+}
+```
 
 ## Reference
 
