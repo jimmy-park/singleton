@@ -19,7 +19,7 @@ jobs:
           - { os: windows-latest, preset: windows }
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Install dependencies on Linux
         if: runner.os == 'Linux'
