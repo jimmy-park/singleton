@@ -32,7 +32,7 @@ public:
         }
     }
 
-    static Derived* GetInstance()
+    static Derived* GetInstance() noexcept
     {
         instance_.wait(nullptr, std::memory_order_acquire);
         return instance_.load(std::memory_order_relaxed);
@@ -52,7 +52,7 @@ protected:
 
 private:
     struct Deleter {
-        ~Deleter()
+        ~Deleter() noexcept(noexcept(std::declval<Derived>().~Derived()))
         {
             if (auto* ptr = instance.load(std::memory_order_acquire); ptr)
                 delete ptr;

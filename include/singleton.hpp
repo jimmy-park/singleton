@@ -1,10 +1,12 @@
 #ifndef SINGLETON_HPP_
 #define SINGLETON_HPP_
 
+#include <type_traits>
+
 template <typename Derived>
 class Singleton {
 public:
-    static Derived& GetInstance()
+    static Derived& GetInstance() noexcept(std::is_nothrow_default_constructible<Derived>::value)
     {
 #ifndef SINGLETON_INJECT_ABSTRACT_CLASS
         static Derived instance;
