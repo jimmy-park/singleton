@@ -54,8 +54,7 @@ private:
     struct Deleter {
         ~Deleter() noexcept(noexcept(std::declval<Derived>().~Derived()))
         {
-            if (auto* ptr = instance.load(std::memory_order_acquire); ptr)
-                delete ptr;
+            delete instance.load(std::memory_order_acquire);
         }
 
         std::atomic<Derived*> instance { nullptr };
