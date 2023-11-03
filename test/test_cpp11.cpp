@@ -18,6 +18,7 @@ int main()
     // C++11
     // Simple, but default constructor only
     Foo::GetInstance().Hello();
+    Foo::GetInstance().Hello();
 
     return 0;
 }

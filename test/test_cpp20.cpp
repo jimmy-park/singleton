@@ -26,7 +26,7 @@ int main()
 
     // C++20
     // Support delayed construction
-    // Release automatically at program termination
+    // Release at the program termination
     std::thread t { [] {
         std::this_thread::sleep_for(std::chrono::seconds { 1 });
         Foo::Construct(20);

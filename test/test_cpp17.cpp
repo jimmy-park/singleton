@@ -28,5 +28,9 @@ int main()
     Foo::GetInstance()->Get();
     Foo::Destruct();
 
+    // Allow re-initialization
+    Foo::Construct(71);
+    Foo::Destruct();
+
     return 0;
 }
