@@ -14,6 +14,7 @@ option(SINGLETON_INJECT_ABSTRACT_CLASS "Prevent construction of derived class it
 option(SINGLETON_INSTALL "Install headers and CMake targets" OFF)
 
 include(cmake/CompileOptions.cmake)
+include(cmake/UseSanitizer.cmake)
 
 if(SINGLETON_COMPILE)
     set(SCOPE PUBLIC)

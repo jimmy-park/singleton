@@ -4,19 +4,27 @@ on: [push, pull_request]
 
 jobs:
   build:
+    name: ${{ matrix.preset }}-${{ matrix.config }}-${{ matrix.abstract }}-${{ matrix.sanitize }}
     strategy:
       fail-fast: false
       matrix:
-        preset: [android, ios, linux-clang, linux-gcc, macos, windows]
+        preset: [linux-clang, linux-gcc, macos, windows]
         config: [Debug, Release]
         abstract: [OFF, ON]
+        sanitize: [address, thread, undefined, leak, memory]
+        exclude:
+          - { preset: linux-gcc, sanitize: memory }
+          - { preset: macos, sanitize: leak }
+          - { preset: macos, sanitize: memory }
+          - { preset: windows, sanitize: thread }
+          - { preset: windows, sanitize: undefined }
+          - { preset: windows, sanitize: leak }
+          - { preset: windows, sanitize: memory }
         include:
-          - { os: macos-latest, preset: ios }
-          - { os: macos-latest, preset: macos }
-          - { os: ubuntu-latest, preset: android }
-          - { os: ubuntu-latest, preset: linux-clang }
-          - { os: ubuntu-latest, preset: linux-gcc }
-          - { os: windows-latest, preset: windows }
+          - { preset: linux-clang, os: ubuntu-latest }
+          - { preset: linux-gcc, os: ubuntu-latest }
+          - { preset: macos, os: macos-latest }
+          - { preset: windows, os: windows-latest }
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
@@ -27,7 +35,44 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y ninja-build
 
-      - name: Configure CMake
+      - name: Configure
+        run: >
+          cmake --preset ${{ matrix.preset }}
+          -DSINGLETON_COMPILE=ON
+          -DSINGLETON_INJECT_ABSTRACT_CLASS=${{ matrix.abstract }}
+          -DSINGLETON_SANITIZE=${{ matrix.sanitize }}
+
+      - name: Build
+        run: cmake --build --preset ${{ matrix.preset }} --config ${{ matrix.config }}
+
+      - name: Test
+        run: ctest --preset ${{ matrix.preset }} -C ${{ matrix.config }}
+
+      - name: Install
+        run: cmake --build --preset ${{ matrix.preset }} --config ${{ matrix.config }} -t install
+
+  build-mobile:
+    name: ${{ matrix.preset }}-${{ matrix.config }}-${{ matrix.abstract }}
+    strategy:
+      fail-fast: false
+      matrix:
+        preset: [android, ios]
+        config: [Debug, Release]
+        abstract: [OFF, ON]
+        include:
+          - { preset: android, os: ubuntu-latest }
+          - { preset: ios, os: macos-latest }
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install dependencies
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ninja-build
+
+      - name: Configure
         run: >
           cmake --preset ${{ matrix.preset }}
           -DSINGLETON_COMPILE=ON
@@ -35,10 +80,6 @@ jobs:
 
       - name: Build
         run: cmake --build --preset ${{ matrix.preset }} --config ${{ matrix.config }}
-
-      - name: Test
-        if: contains(fromJSON('["linux-clang", "linux-gcc", "macos", "windows"]'), matrix.preset)
-        run: ctest --preset ${{ matrix.preset }} -C ${{ matrix.config }}
 
       - name: Install
         run: cmake --build --preset ${{ matrix.preset }} --config ${{ matrix.config }} -t install

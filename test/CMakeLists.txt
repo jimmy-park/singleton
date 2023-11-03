@@ -14,3 +14,10 @@ target_link_libraries(test_cpp20 PRIVATE
     Threads::Threads
 )
 add_test(test_cpp20 test_cpp20)
+
+if(MSVC)
+    cmake_path(GET CMAKE_CXX_COMPILER PARENT_PATH VS_PATH)
+    set_tests_properties(test_cpp11 test_cpp17 test_cpp20
+        PROPERTIES ENVIRONMENT PATH=${VS_PATH}
+    )
+endif()
