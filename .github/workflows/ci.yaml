@@ -83,3 +83,86 @@ jobs:
 
       - name: Install
         run: cmake --build --preset ${{ matrix.preset }} --config ${{ matrix.config }} -t install
+
+  build-bsd:
+    name: ${{ matrix.preset }}-${{ matrix.arch }}-${{ matrix.config }}-${{ matrix.abstract }}
+    strategy:
+      fail-fast: false
+      matrix:
+        preset: [freebsd, netbsd, openbsd]
+        arch: [arm64, x86_64]
+        config: [Debug, Release]
+        abstract: [OFF, ON]
+        exclude:
+          - { preset: netbsd, arch: arm64 }
+        include:
+          - { preset: freebsd, version: "13.2", pkg: pkg install -y, cc: clang++ }
+          - { preset: netbsd, version: "9.3", pkg: pkgin -y -V install gcc13, cc: /usr/pkg/gcc13/bin/g++ }
+          - { preset: openbsd, version: "7.4", pkg: pkg_add, cc: clang++ }
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: cross-platform-actions/action@master
+        with:
+          operating_system: ${{ matrix.preset }}
+          architecture: ${{ matrix.arch }}
+          version: ${{ matrix.version }}
+          run: |
+            sudo ${{ matrix.pkg }} cmake
+            cmake -B build                                             \
+              -DCMAKE_BUILD_TYPE=${{ matrix.config }}                  \
+              -DCMAKE_CXX_COMPILER=${{ matrix.cc }}                    \
+              -DCMAKE_INSTALL_PREFIX=${{ github.workspace }}/install   \
+              -DSINGLETON_COMPILE=ON                                   \
+              -DSINGLETON_INJECT_ABSTRACT_CLASS=${{ matrix.abstract }}
+            cmake --build build
+            cd build
+            ctest -V -C ${{ matrix.config }}
+            cd ..
+            cmake --install build
+
+  build-msys2:
+    name: msys2-${{ matrix.preset }}-${{ matrix.config }}-${{ matrix.abstract }}
+    strategy:
+      fail-fast: false
+      matrix:
+        preset: [mingw64, mingw32, ucrt64, clang64]
+        config: [Debug, Release]
+        abstract: [OFF, ON]
+        include:
+          - { preset: mingw64, env: x86_64 }
+          - { preset: mingw32, env: i686 }
+          - { preset: ucrt64, env: ucrt-x86_64 }
+          - { preset: clang64, env: clang-x86_64 }
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: msys2 {0}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: msys2/setup-msys2@v2
+        with:
+          msystem: ${{ matrix.preset }}
+          update: true
+          install: >-
+            mingw-w64-${{ matrix.env }}-cmake
+            mingw-w64-${{ matrix.env }}-gcc
+            mingw-w64-${{ matrix.env }}-make
+
+      - name: Configure
+        run: >
+          cmake -B Build -G "MinGW Makefiles"
+          -DCMAKE_BUILD_TYPE=${{ matrix.config }}
+          -DCMAKE_INSTALL_PREFIX=${{ github.workspace }}/install
+          -DSINGLETON_COMPILE=ON
+          -DSINGLETON_INJECT_ABSTRACT_CLASS=${{ matrix.abstract }}
+
+      - name: Build
+        run: cmake --build build
+
+      - name: Test
+        working-directory: build
+        run: ctest -V -C ${{ matrix.config }}
+
+      - name: Install
+        run: cmake --install build
