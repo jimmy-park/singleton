@@ -19,7 +19,7 @@
                 "host-linux",
                 "target-linux",
                 "ninja",
-                "clang",
+                "clang-15",
                 "default"
             ]
         },
