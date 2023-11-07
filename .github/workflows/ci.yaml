@@ -126,7 +126,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        preset: [MINGW64, MINGW32, UCRT64, CLANG32, CLANG64, CLANGARM64]
+        preset: [UCRT64, CLANG64, CLANG32, MINGW64, MINGW32]
         config: [Debug, Release]
         abstract: [OFF, ON]
     runs-on: windows-latest
