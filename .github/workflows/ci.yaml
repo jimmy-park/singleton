@@ -126,14 +126,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        preset: [mingw64, mingw32, ucrt64, clang64]
+        preset: [MINGW64, MINGW32, UCRT64, CLANG32, CLANG64, CLANGARM64]
         config: [Debug, Release]
         abstract: [OFF, ON]
-        include:
-          - { preset: mingw64, env: x86_64 }
-          - { preset: mingw32, env: i686 }
-          - { preset: ucrt64, env: ucrt-x86_64 }
-          - { preset: clang64, env: clang-x86_64 }
     runs-on: windows-latest
     defaults:
       run:
@@ -144,10 +139,10 @@ jobs:
         with:
           msystem: ${{ matrix.preset }}
           update: true
-          install: >-
-            mingw-w64-${{ matrix.env }}-cmake
-            mingw-w64-${{ matrix.env }}-gcc
-            mingw-w64-${{ matrix.env }}-make
+          pacboy: >-
+            cmake:p
+            gcc:p
+            make:p
 
       - name: Configure
         run: >
