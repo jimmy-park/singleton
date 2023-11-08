@@ -146,7 +146,42 @@ jobs:
 
       - name: Configure
         run: >
-          cmake -B Build -G "MinGW Makefiles"
+          cmake -B build -G "MinGW Makefiles"
+          -DCMAKE_BUILD_TYPE=${{ matrix.config }}
+          -DCMAKE_INSTALL_PREFIX=${{ github.workspace }}/install
+          -DSINGLETON_COMPILE=ON
+          -DSINGLETON_INJECT_ABSTRACT_CLASS=${{ matrix.abstract }}
+
+      - name: Build
+        run: cmake --build build
+
+      - name: Test
+        working-directory: build
+        run: ctest -V -C ${{ matrix.config }}
+
+      - name: Install
+        run: cmake --install build
+
+  build-cygwin:
+    name: cygwin-${{ matrix.config }}-${{ matrix.abstract }}
+    strategy:
+      fail-fast: false
+      matrix:
+        config: [Debug, Release]
+        abstract: [OFF, ON]
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: C:\cygwin\bin\bash.exe --noprofile --norc -o igncr -eo pipefail '{0}'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: cygwin/cygwin-install-action@v4
+        with:
+          packages: cmake gcc-g++ ninja
+
+      - name: Configure
+        run: >
+          cmake -B build -G Ninja
           -DCMAKE_BUILD_TYPE=${{ matrix.config }}
           -DCMAKE_INSTALL_PREFIX=${{ github.workspace }}/install
           -DSINGLETON_COMPILE=ON
