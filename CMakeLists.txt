@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.23)
 
 project(
     singleton
-    VERSION 1.4.0
+    VERSION 1.5.0
     DESCRIPTION "C++11 template singleton pattern"
     HOMEPAGE_URL "https://github.com/jimmy-park/singleton"
     LANGUAGES CXX
