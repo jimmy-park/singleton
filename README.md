@@ -7,11 +7,10 @@ Implement thread-safe singleton classes using [Curiously Recurring Template Patt
 
 ## CMake Options
 
-| Option                            | Default | Description                                  |
-| --------------------------------- | ------- | -------------------------------------------- |
-| `SINGLETON_COMPILE`               | `OFF`   | Build as a static/shared library             |
-| `SINGLETON_INJECT_ABSTRACT_CLASS` | `OFF`   | Prevent construction of derived class itself |
-| `SINGLETON_INSTALL`               | `OFF`   | Install headers and CMake targets            |
+| Option                            | Default | Description                                           |
+| --------------------------------- | ------- | ----------------------------------------------------- |
+| `SINGLETON_INJECT_ABSTRACT_CLASS` | `OFF`   | Prevent construction of derived class at compile time |
+| `SINGLETON_INSTALL`               | `OFF`   | Install headers and CMake targets                     |
 
 ## Usage
 
@@ -49,7 +48,11 @@ FetchContent_MakeAvailable(singleton)
 # )
 
 add_executable(main main.cpp)
-target_link_libraries(main PRIVATE singleton::singleton) # or singleton::singleton-dclp
+target_link_libraries(main PRIVATE 
+    singleton::singleton        # C++11
+    singleton::singleton-dclp   # C++17
+    singleton::singleton-atomic # C++20
+)
 ```
 
 ## Example
@@ -78,7 +81,7 @@ int main()
 
 Implement based on [Double-Checked Locking Pattern (DCLP)](https://en.wikipedia.org/wiki/Double-checked_locking)
 
-Use this version when you need to control the construction/destruction order manually or initialize with parameters
+Use this version when you need to initialize with parameters or control the destruction order manually
 
 - C++17 features
   - Inline static member variable
@@ -112,7 +115,7 @@ int main()
 
 ### C++20
 
-Use `std::atomic::wait` to block `GetInstance()` during construction
+Use `std::atomic::wait()` to block `GetInstance()` during construction
 
 ```cpp
 #include <singleton_atomic.hpp>
