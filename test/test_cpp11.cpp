@@ -1,24 +1,37 @@
-#include <iostream>
+#include <atomic>
+#include <thread>
+#include <vector>
 
 #include <singleton.hpp>
 
-class Foo : public Singleton<Foo> {
-public:
-    Foo() { std::cout << "Foo\n"; }
-    ~Foo() { std::cout << "~Foo\n"; }
+#include "test_macro.h"
 
-    void Hello() const { std::cout << "Hello\n"; }
+static std::atomic_uint32_t init { 0 };
+
+class Counter : public Singleton<Counter> {
+public:
+    Counter() { ++init; }
+
+    void Add() { ++count_; }
+    std::uint32_t GetCount() const { return count_; }
+
+private:
+    std::atomic_uint32_t count_ { 0 };
 };
 
 int main()
 {
-    // Compile error when SINGLETON_INJECT_ABSTRACT_CLASS is defined
-    // Foo foo;
+    const auto count = std::thread::hardware_concurrency();
+    std::vector<std::thread> threads;
 
-    // C++11
-    // Simple, but default constructor only
-    Foo::GetInstance().Hello();
-    Foo::GetInstance().Hello();
+    for (auto i = 0u; i < count; ++i) {
+        threads.emplace_back([] { Counter::GetInstance().Add(); });
+    }
 
-    return 0;
+    for (auto& thread : threads) {
+        thread.join();
+    }
+
+    CHECK(init == 1);
+    CHECK(Counter::GetInstance().GetCount() == count);
 }

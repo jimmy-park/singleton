@@ -1,38 +1,43 @@
-#include <chrono>
-#include <iostream>
+#include <atomic>
+#include <latch>
 #include <thread>
+#include <vector>
 
 #include <singleton_atomic.hpp>
 
-class Foo : public SingletonAtomic<Foo> {
-public:
-    Foo(int n)
-        : n_ { n }
-    {
-        std::cout << "Foo initialized with " << n << "\n";
-    }
-    ~Foo() { std::cout << "~Foo\n"; }
+#include "test_macro.h"
 
-    void Get() const { std::cout << "Foo::Get " << n_ << "\n"; }
+static std::atomic_uint32_t init { 0 };
+
+class Counter : public SingletonAtomic<Counter> {
+public:
+    Counter() { ++init; }
+
+    void Add() { ++count_; }
+    std::uint32_t GetCount() const { return count_; }
 
 private:
-    int n_;
+    std::atomic_uint32_t count_ { 0 };
 };
 
 int main()
 {
-    // Compile error when SINGLETON_INJECT_ABSTRACT_CLASS is defined
-    // Foo foo; Bar bar;
+    const auto count = std::thread::hardware_concurrency();
+    std::latch block { static_cast<std::ptrdiff_t>(count) };
+    std::vector<std::thread> threads;
 
-    // C++20
-    // Support delayed construction
-    // Release at the program termination
-    std::thread t { [] {
-        std::this_thread::sleep_for(std::chrono::seconds { 1 });
-        Foo::Construct(20);
-    } };
-    Foo::GetInstance()->Get();
-    t.join();
+    for (auto i = 0u; i < count; ++i) {
+        threads.emplace_back([&block] {
+            block.arrive_and_wait();
+            Counter::Construct();
+            Counter::GetInstance()->Add();
+        });
+    }
 
-    return 0;
+    for (auto& thread : threads) {
+        thread.join();
+    }
+
+    CHECK(init == 1);
+    CHECK(Counter::GetInstance()->GetCount() == count);
 }
