@@ -1,8 +1,6 @@
 #ifndef SINGLETON_DCLP_HPP_
 #define SINGLETON_DCLP_HPP_
 
-#include <cassert>
-
 #include <atomic>
 #include <mutex>
 #include <shared_mutex>
@@ -52,7 +50,6 @@ public:
             std::shared_lock lock { mutex_ };
 
             instance = instance_.load(std::memory_order_relaxed);
-            assert(instance);
         }
 
         return instance;
