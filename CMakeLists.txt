@@ -3,12 +3,11 @@ cmake_minimum_required(VERSION 3.23)
 project(
     singleton
     VERSION 1.5.0
-    DESCRIPTION "C++11 template singleton pattern"
+    DESCRIPTION "C++11/17/20 template singleton pattern"
     HOMEPAGE_URL "https://github.com/jimmy-park/singleton"
     LANGUAGES CXX
 )
 
-# Custom options
 option(SINGLETON_COMPILE "Build as a static/shared library" OFF)
 option(SINGLETON_INJECT_ABSTRACT_CLASS "Prevent construction of derived class itself" OFF)
 option(SINGLETON_INSTALL "Install headers and CMake targets" OFF)

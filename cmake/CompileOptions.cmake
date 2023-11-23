@@ -1,6 +1,6 @@
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+if(MSVC)
     add_compile_options(
         /WX /W4 /permissive-
         /w14242 # 'identfier': conversion from 'type1' to 'type1', possible loss of data
