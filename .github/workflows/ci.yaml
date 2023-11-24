@@ -96,9 +96,18 @@ jobs:
         exclude:
           - { preset: netbsd, arch: arm64 }
         include:
-          - { preset: freebsd, version: "13.2", pkg: pkg install -y, cc: clang++ }
-          - { preset: netbsd, version: "9.3", pkg: pkgin -y -V install gcc13, cc: /usr/pkg/gcc13/bin/g++ }
-          - { preset: openbsd, version: "7.4", pkg: pkg_add, cc: clang++ }
+          - preset: freebsd
+            version: "13.2"
+            install: sudo pkg install -y cmake ninja
+            cc: clang++
+          - preset: netbsd
+            version: "9.3"
+            install: sudo pkgin -y install cmake ninja-build gcc13
+            cc: /usr/pkg/gcc13/bin/g++
+          - preset: openbsd
+            version: "7.4"
+            install: sudo pkg_add cmake ninja
+            cc: clang++
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -108,8 +117,8 @@ jobs:
           architecture: ${{ matrix.arch }}
           version: ${{ matrix.version }}
           run: |
-            sudo ${{ matrix.pkg }} cmake
-            cmake -B build                                             \
+            ${{ matrix.install }}
+            cmake -B build -G Ninja                                    \
               -DCMAKE_BUILD_TYPE=${{ matrix.config }}                  \
               -DCMAKE_CXX_COMPILER=${{ matrix.cc }}                    \
               -DCMAKE_INSTALL_PREFIX=${{ github.workspace }}/install   \
@@ -142,11 +151,11 @@ jobs:
           pacboy: >-
             cmake:p
             gcc:p
-            make:p
+            ninja:p
 
       - name: Configure
         run: >
-          cmake -B build -G "MinGW Makefiles"
+          cmake -B build -G Ninja
           -DCMAKE_BUILD_TYPE=${{ matrix.config }}
           -DCMAKE_INSTALL_PREFIX=${{ github.workspace }}/install
           -DSINGLETON_COMPILE=ON
