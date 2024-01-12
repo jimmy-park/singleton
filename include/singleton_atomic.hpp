@@ -16,7 +16,7 @@ public:
 #else
         struct Dummy final : Derived {
             using Derived::Derived;
-            void ProhibitConstructFromDerived() const noexcept override { }
+            consteval void ProhibitConstructFromDerived() const noexcept override { }
         };
         using Instance = Dummy;
 #endif // SINGLETON_INJECT_ABSTRACT_CLASS
@@ -61,7 +61,7 @@ private:
     };
 
 #ifdef SINGLETON_INJECT_ABSTRACT_CLASS
-    virtual void ProhibitConstructFromDerived() const noexcept = 0;
+    consteval virtual void ProhibitConstructFromDerived() const noexcept = 0;
 #endif // SINGLETON_INJECT_ABSTRACT_CLASS
 
     inline static Deleter deleter_;
