@@ -16,7 +16,7 @@ public:
 #else
         struct Dummy : public Derived {
             using Derived::Derived;
-            void ProhibitConstructFromDerived() const override { }
+            void ProhibitConstructFromDerived() const noexcept override { }
         };
         using Instance = Dummy;
 #endif // SINGLETON_INJECT_ABSTRACT_CLASS
@@ -41,9 +41,9 @@ public:
 protected:
     SingletonAtomic() = default;
     SingletonAtomic(const SingletonAtomic&) = delete;
-    SingletonAtomic(SingletonAtomic&&) noexcept = delete;
+    SingletonAtomic(SingletonAtomic&&) = delete;
     SingletonAtomic& operator=(const SingletonAtomic&) = delete;
-    SingletonAtomic& operator=(SingletonAtomic&&) noexcept = delete;
+    SingletonAtomic& operator=(SingletonAtomic&&) = delete;
 #ifndef SINGLETON_INJECT_ABSTRACT_CLASS
     ~SingletonAtomic() = default;
 #else
@@ -61,7 +61,7 @@ private:
     };
 
 #ifdef SINGLETON_INJECT_ABSTRACT_CLASS
-    virtual void ProhibitConstructFromDerived() const = 0;
+    virtual void ProhibitConstructFromDerived() const noexcept = 0;
 #endif // SINGLETON_INJECT_ABSTRACT_CLASS
 
     inline static Deleter deleter_;

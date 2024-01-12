@@ -12,7 +12,7 @@ public:
         static Derived instance;
 #else
         struct Dummy : public Derived {
-            void ProhibitConstructFromDerived() const override { }
+            void ProhibitConstructFromDerived() const noexcept override { }
         };
         static Dummy instance;
 #endif // SINGLETON_INJECT_ABSTRACT_CLASS
@@ -23,16 +23,16 @@ public:
 protected:
     Singleton() = default;
     Singleton(const Singleton&) = delete;
-    Singleton(Singleton&&) noexcept = delete;
+    Singleton(Singleton&&) = delete;
     Singleton& operator=(const Singleton&) = delete;
-    Singleton& operator=(Singleton&&) noexcept = delete;
+    Singleton& operator=(Singleton&&) = delete;
 #ifndef SINGLETON_INJECT_ABSTRACT_CLASS
     ~Singleton() = default;
 #else
     virtual ~Singleton() = default;
 
 private:
-    virtual void ProhibitConstructFromDerived() const = 0;
+    virtual void ProhibitConstructFromDerived() const noexcept = 0;
 #endif // SINGLETON_INJECT_ABSTRACT_CLASS
 };
 
