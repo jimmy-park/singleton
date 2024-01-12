@@ -11,7 +11,7 @@ public:
 #ifndef SINGLETON_INJECT_ABSTRACT_CLASS
         static Derived instance;
 #else
-        struct Dummy : public Derived {
+        struct Dummy final : Derived {
             void ProhibitConstructFromDerived() const noexcept override { }
         };
         static Dummy instance;
