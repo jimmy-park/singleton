@@ -14,6 +14,15 @@
             ]
         },
         {
+            "name": "windows-ninja",
+            "inherits": [
+                "host-windows",
+                "target-windows",
+                "ninja",
+                "default"
+            ]
+        },
+        {
             "name": "windows-arm",
             "inherits": [
                 "host-windows",
@@ -59,6 +68,13 @@
             ]
         },
         {
+            "name": "windows-ninja",
+            "configurePreset": "windows-ninja",
+            "inherits": [
+                "host-windows"
+            ]
+        },
+        {
             "name": "windows-arm",
             "configurePreset": "windows-arm",
             "inherits": [
@@ -91,6 +107,14 @@
         {
             "name": "windows",
             "configurePreset": "windows",
+            "inherits": [
+                "host-windows",
+                "options"
+            ]
+        },
+        {
+            "name": "windows-ninja",
+            "configurePreset": "windows-ninja",
             "inherits": [
                 "host-windows",
                 "options"
