@@ -30,12 +30,14 @@ public:
 
     void ArriveAndWait()
     {
+        std::unique_lock<std::mutex> lock { mutex_ };
+
         const auto current = --count_;
 
         if (current == 0) {
+            lock.unlock();
             cv_.notify_all();
         } else {
-            std::unique_lock<std::mutex> lock { mutex_ };
             cv_.wait(lock, [this] { return count_ == 0; });
         }
     }
@@ -43,7 +45,7 @@ public:
 private:
     std::mutex mutex_;
     std::condition_variable cv_;
-    std::atomic_uint count_;
+    unsigned int count_;
 };
 
 int main()
