@@ -63,6 +63,6 @@ int main()
         thread.join();
     }
 
-    CHECK(init == 1);
-    CHECK(Counter::GetInstance().GetCount() == count);
+    CHECK_EQ(init, 1);
+    CHECK_EQ(Counter::GetInstance().GetCount(), count);
 }

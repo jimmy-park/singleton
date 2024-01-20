@@ -66,25 +66,25 @@ int main()
         thread.join();
     }
 
-    CHECK(init == 1);
-    CHECK(deinit == 0);
-    CHECK(Counter::GetInstance()->GetCount() == count);
+    CHECK_EQ(init, 1);
+    CHECK_EQ(deinit, 0);
+    CHECK_EQ(Counter::GetInstance()->GetCount(), count);
 
     Counter::Destruct();
 
-    CHECK(init == 1);
-    CHECK(deinit == 1);
-    CHECK(Counter::GetInstance() == nullptr);
+    CHECK_EQ(init, 1);
+    CHECK_EQ(deinit, 1);
+    CHECK_EQ(Counter::GetInstance(), nullptr);
 
     Counter::Construct();
 
-    CHECK(init == 2);
-    CHECK(deinit == 1);
-    CHECK(Counter::GetInstance()->GetCount() == 0);
+    CHECK_EQ(init, 2);
+    CHECK_EQ(deinit, 1);
+    CHECK_EQ(Counter::GetInstance()->GetCount(), 0);
 
     Counter::Destruct();
 
-    CHECK(init == 2);
-    CHECK(deinit == 2);
-    CHECK(Counter::GetInstance() == nullptr);
+    CHECK_EQ(init, 2);
+    CHECK_EQ(deinit, 2);
+    CHECK_EQ(Counter::GetInstance(), nullptr);
 }
