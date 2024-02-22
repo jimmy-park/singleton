@@ -108,7 +108,7 @@ jobs:
           - { preset: netbsd, arch: arm64 }
         include:
           - preset: freebsd
-            version: "13.2"
+            version: "14.0"
             install: sudo pkg install -y cmake ninja
             cc: clang++
           - preset: netbsd
