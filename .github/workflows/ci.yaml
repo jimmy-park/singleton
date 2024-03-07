@@ -8,7 +8,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        preset: [linux-clang, linux-gcc, macos, windows-ninja]
+        preset: [linux-clang, linux-gcc, macos, windows]
         config: [Debug, Release]
         abstract: [OFF, ON]
         sanitize: [address, thread, undefined, leak, memory]
@@ -16,15 +16,15 @@ jobs:
           - { preset: linux-gcc, sanitize: memory }
           - { preset: macos, sanitize: leak }
           - { preset: macos, sanitize: memory }
-          - { preset: windows-ninja, sanitize: thread }
-          - { preset: windows-ninja, sanitize: undefined }
-          - { preset: windows-ninja, sanitize: leak }
-          - { preset: windows-ninja, sanitize: memory }
+          - { preset: windows, sanitize: thread }
+          - { preset: windows, sanitize: undefined }
+          - { preset: windows, sanitize: leak }
+          - { preset: windows, sanitize: memory }
         include:
           - { preset: linux-clang, os: ubuntu-latest }
           - { preset: linux-gcc, os: ubuntu-latest }
           - { preset: macos, os: macos-latest }
-          - { preset: windows-ninja, os: windows-latest }
+          - { preset: windows, os: windows-latest }
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
@@ -34,17 +34,6 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y ninja-build
-      - name: Install dependencies on Windows
-        if: runner.os == 'Windows'
-        run: |
-          choco install ninja
-
-      - name: Choose the latest MSVC toolset
-        if: runner.os == 'Windows'
-        uses: TheMrMilchmann/setup-msvc-dev@v3
-        with:
-          arch: x64
-          toolset: 14.38
 
       - name: Configure
         run: >
