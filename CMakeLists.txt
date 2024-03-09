@@ -30,6 +30,15 @@ else()
     add_library(singleton-atomic INTERFACE)
 endif()
 
+# Modify source
+if(MINGW)
+    file(READ ${CMAKE_SOURCE_DIR}/include/singleton_dclp.hpp DCLP)
+    string(REPLACE "#include <shared_mutex>\n" "" DCLP "${DCLP}")
+    string(REPLACE "std::shared_lock" "std::lock_guard" DCLP "${DCLP}")
+    string(REPLACE "std::shared_mutex" "std::mutex" DCLP "${DCLP}")
+    file(WRITE ${CMAKE_SOURCE_DIR}/include/singleton_dclp.hpp "${DCLP}")
+endif()
+
 # Create a singleton target
 add_library(singleton::singleton ALIAS singleton)
 target_compile_features(singleton ${SCOPE} cxx_std_11)
