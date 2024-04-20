@@ -46,7 +46,7 @@ jobs:
         run: cmake --build --preset ${{ matrix.preset }} --config ${{ matrix.config }}
 
       - name: Test
-        run: ctest --preset ${{ matrix.preset }} -C ${{ matrix.config }}
+        run: ctest --preset ${{ matrix.preset }} -C ${{ matrix.config }} --repeat-until-fail 100
 
       - name: Install
         run: cmake --build --preset ${{ matrix.preset }} --config ${{ matrix.config }} -t install
@@ -124,7 +124,7 @@ jobs:
               -DSINGLETON_INJECT_ABSTRACT_CLASS=${{ matrix.abstract }}
             cmake --build build
             cd build
-            ctest -V -C ${{ matrix.config }}
+            ctest -V -C ${{ matrix.config }} --repeat-until-fail 100
             cd ..
             cmake --install build
 
@@ -164,7 +164,7 @@ jobs:
 
       - name: Test
         working-directory: build
-        run: ctest -V -C ${{ matrix.config }}
+        run: ctest -V -C ${{ matrix.config }} --repeat-until-fail 100
 
       - name: Install
         run: cmake --install build
@@ -199,7 +199,7 @@ jobs:
 
       - name: Test
         working-directory: build
-        run: ctest -V -C ${{ matrix.config }}
+        run: ctest -V -C ${{ matrix.config }} --repeat-until-fail 100
 
       - name: Install
         run: cmake --install build
