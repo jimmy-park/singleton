@@ -1,6 +1,5 @@
 #include <atomic>
-#include <condition_variable>
-#include <mutex>
+#include <latch>
 #include <thread>
 #include <vector>
 
@@ -23,42 +22,15 @@ private:
     std::atomic_uint32_t count_ { 0 };
 };
 
-class Latch {
-public:
-    Latch(unsigned int count)
-        : count_ { count }
-    {
-    }
-
-    void ArriveAndWait()
-    {
-        std::unique_lock lock { mutex_ };
-
-        const auto current = --count_;
-
-        if (current == 0) {
-            lock.unlock();
-            cv_.notify_all();
-        } else {
-            cv_.wait(lock, [this] { return count_ == 0; });
-        }
-    }
-
-private:
-    std::mutex mutex_;
-    std::condition_variable cv_;
-    unsigned int count_;
-};
-
 int main()
 {
     const auto count = std::thread::hardware_concurrency();
-    Latch block { count };
+    std::latch block { static_cast<std::ptrdiff_t>(count) };
     std::vector<std::thread> threads;
 
     for (auto i = 0u; i < count; ++i) {
         threads.emplace_back([&block] {
-            block.ArriveAndWait();
+            block.arrive_and_wait();
             Counter::Construct();
             Counter::GetInstance()->Add();
         });
