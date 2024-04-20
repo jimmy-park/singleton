@@ -12,6 +12,7 @@ endif()
 
 foreach(test_case IN LISTS SINGLETON_TESTS)
     add_executable(${test_case} ${test_case}.cpp test_macro.h)
+    target_compile_features(${test_case} PRIVATE cxx_std_20)
     target_link_libraries(${test_case} PRIVATE Threads::Threads)
     add_test(${test_case} ${test_case})
 
