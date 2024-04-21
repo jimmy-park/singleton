@@ -31,7 +31,7 @@ else()
 endif()
 
 # Modify source
-if(MINGW)
+if(MINGW OR CYGWIN)
     file(READ ${CMAKE_SOURCE_DIR}/include/singleton_dclp.hpp DCLP)
     string(REPLACE "#include <shared_mutex>\n" "" DCLP "${DCLP}")
     string(REPLACE "std::shared_lock" "std::lock_guard" DCLP "${DCLP}")
