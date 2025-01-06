@@ -95,7 +95,7 @@ jobs:
         abstract: [OFF, ON]
         include:
           - preset: freebsd
-            version: "14.0"
+            version: "14.2"
             install: sudo pkg install -y cmake ninja
             cc: clang++
           - preset: netbsd
@@ -103,7 +103,7 @@ jobs:
             install: sudo pkgin -y install cmake ninja-build gcc13
             cc: /usr/pkg/gcc13/bin/g++
           - preset: openbsd
-            version: "7.5"
+            version: "7.6"
             install: sudo pkg_add cmake ninja
             cc: clang++
     runs-on: ubuntu-latest
@@ -133,7 +133,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        preset: [UCRT64, CLANG64, CLANG32, MINGW64, MINGW32]
+        preset: [UCRT64, CLANG64, MINGW64, MINGW32]
         config: [Debug, Release]
         abstract: [OFF, ON]
     runs-on: windows-latest
