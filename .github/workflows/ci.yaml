@@ -30,7 +30,7 @@ jobs:
           - { preset: windows, os: windows-latest }
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Install dependencies on Linux
         if: runner.os == 'Linux'
@@ -67,7 +67,7 @@ jobs:
           - { preset: ios, os: macos-latest }
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Install dependencies
         if: runner.os == 'Linux'
@@ -111,7 +111,7 @@ jobs:
             cc: clang++
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: cross-platform-actions/action@master
         with:
           operating_system: ${{ matrix.preset }}
@@ -144,7 +144,7 @@ jobs:
       run:
         shell: msys2 {0}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: msys2/setup-msys2@v2
         with:
           msystem: ${{ matrix.preset }}
@@ -184,7 +184,7 @@ jobs:
       run:
         shell: C:\cygwin\bin\bash.exe --noprofile --norc -o igncr -eo pipefail '{0}'
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: cygwin/cygwin-install-action@v6
         with:
           packages: cmake gcc-g++ ninja
